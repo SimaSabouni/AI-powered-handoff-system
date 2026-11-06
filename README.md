@@ -4,8 +4,8 @@ This is a SWEB654 course project exploring how AI can support bilingual Arabic�
 
 ## Design links
 
-- [Wireframes](https://canva.link/rut7n5si5jbrej3)
-- [Figma design](https://www.figma.com/design/wEQReZcbtgt59HAE86phk6/Untitled?node-id=0-1&t=dSrFUoKIzOBRacVZ-1)
+- [Wireframes](https://canva.link/rut7n5si5jbrej3) — Early screen layouts and user flows for the contributor and receiver views.
+- [Figma mockup](https://www.figma.com/design/wEQReZcbtgt59HAE86phk6/Untitled?node-id=0-1&t=dSrFUoKIzOBRacVZ-1) — The higher-fidelity mockup used to refine the layout and visual direction.
 
 ## Features
 
