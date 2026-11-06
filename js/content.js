@@ -10,7 +10,7 @@ window.UI = {
     langLabel: "Language", roleLabel: "Role",
     nav: { overview: "Project Overview", handover: "Handover", decisions: "Decisions & Evidence", files: "Files & Versions", questions: "Questions & Clarifications", review: "Review & Share" },
     // Project Overview
-    projectSummary: "Project summary", taskProgress: "Task progress", projectTeam: "Project team", complete: "Complete", verified: "Verified",
+    projectSummary: "Project summary", aiProjectSummary: "AI project summary", taskProgress: "Task progress", projectTeam: "Project team", complete: "Complete", verified: "Verified",
     taskTable: "Task table", colTask: "Task", colOwner: "Owner", colProgress: "Progress", colVerification: "Verification", colFile: "File / v.",
     needsAttention: "Needs attention", unverifiedTask: "Unverified task", blocker: "Blocker",
     nextSteps: "Next steps", checkEvidence: "Check evidence", resumePending: "Resume pending work",
@@ -21,6 +21,7 @@ window.UI = {
     uncertaintyDetails: "Uncertainty details", informationType: "Information type", reason: "Why this is uncertain", impact: "Potential impact", resolution: "How to resolve", verificationRecord: "Verification record", conflictingViews: "Conflicting views",
     // Files
     fileList: "File list", fileDetails: "File details", currentVersion: "Current version", versionHistory: "Version history", comparison: "Comparison",
+    aiChangeSummary: "AI change summary", addToHandoff: "Add to handoff", addedToHandoff: "Added to handoff", changeSummaryAdded: "AI change summary added to the handoff",
     // Questions
     questionList: "Question list", discussionThread: "Discussion thread", reply: "Reply", writeReply: "Write a reply", send: "Send",
     restrictedAccess: "Restricted access", credentialsExcluded: "Login credentials are not included in the handover.", requestAccess: "Request authorized access", accessRequestSent: "Access request sent",
@@ -46,7 +47,7 @@ window.UI = {
     contributor: "المساهم", receiver: "المستلم",
     langLabel: "اللغة", roleLabel: "الدور",
     nav: { overview: "نظرة عامة على المشروع", handover: "التسليم", decisions: "القرارات والأدلة", files: "الملفات والإصدارات", questions: "الأسئلة والتوضيحات", review: "المراجعة والمشاركة" },
-    projectSummary: "ملخص المشروع", taskProgress: "تقدّم المهام", projectTeam: "فريق المشروع", complete: "مكتملة", verified: "تم التحقق",
+    projectSummary: "ملخص المشروع", aiProjectSummary: "ملخص المشروع بالذكاء الاصطناعي", taskProgress: "تقدّم المهام", projectTeam: "فريق المشروع", complete: "مكتملة", verified: "تم التحقق",
     taskTable: "جدول المهام", colTask: "المهمة", colOwner: "المسؤول", colProgress: "التقدّم", colVerification: "التحقق", colFile: "الملف / الإصدار",
     needsAttention: "يحتاج إلى انتباه", unverifiedTask: "مهمة لم يُتحقق منها", blocker: "عائق",
     nextSteps: "الخطوات التالية", checkEvidence: "مراجعة الأدلة", resumePending: "استئناف العمل المعلّق",
@@ -54,6 +55,7 @@ window.UI = {
     decisions: "القرارات", rationale: "المبررات", verificationStatus: "حالة التحقق", evidence: "الأدلة", sourceVersion: "المصدر / الإصدار", sourceOwner: "مالك المصدر", sourceDate: "تاريخ المصدر", sourceExcerpt: "مقتطف من المصدر",
     uncertaintyDetails: "تفاصيل عدم اليقين", informationType: "نوع المعلومة", reason: "سبب عدم اليقين", impact: "التأثير المحتمل", resolution: "كيفية الحل", verificationRecord: "سجل التحقق", conflictingViews: "الآراء المتعارضة",
     fileList: "قائمة الملفات", fileDetails: "تفاصيل الملف", currentVersion: "الإصدار الحالي", versionHistory: "سجل الإصدارات", comparison: "المقارنة",
+    aiChangeSummary: "ملخص التغييرات بالذكاء الاصطناعي", addToHandoff: "إضافة إلى التسليم", addedToHandoff: "أُضيف إلى التسليم", changeSummaryAdded: "تمت إضافة ملخص التغييرات إلى التسليم",
     questionList: "قائمة الأسئلة", discussionThread: "سلسلة النقاش", reply: "رد", writeReply: "اكتب ردًا", send: "إرسال",
     restrictedAccess: "وصول مقيّد", credentialsExcluded: "بيانات تسجيل الدخول غير مضمنة في التسليم.", requestAccess: "طلب وصول مصرح به", accessRequestSent: "تم إرسال طلب الوصول",
     editorTitle: "محرر التسليم", readerTitle: "عارض التسليم",
@@ -136,7 +138,26 @@ window.DATA = {
       versions: [ { v: "v2", st: "current" }, { v: "v1", st: "earlier" } ],
       compare: {
         v1: [ { en: "Pages audited: 186", ar: "الصفحات المدققة: 186" }, { en: "Pages to remove: 31", ar: "صفحات للحذف: 31" }, { en: "Reviewer: none", ar: "المراجع: لا يوجد" } ],
-        v2: [ { en: "Pages audited: 214", ar: "الصفحات المدققة: 214", changed: true }, { en: "Pages to remove: 27", ar: "صفحات للحذف: 27", changed: true }, { en: "Reviewer: Daniel K.", ar: "المراجع: دانيال ك.", changed: true } ] } },
+        v2: [ { en: "Pages audited: 214", ar: "الصفحات المدققة: 214", changed: true }, { en: "Pages to remove: 27", ar: "صفحات للحذف: 27", changed: true }, { en: "Reviewer: Daniel K.", ar: "المراجع: دانيال ك.", changed: true } ] },
+      aiComparison: {
+        bullets: [
+          { en: "Pages audited increased from 186 to 214 (+28).", ar: "ارتفع عدد الصفحات المدققة من 186 إلى 214 (+28)." },
+          { en: "Pages marked for removal decreased from 31 to 27 (-4).", ar: "انخفض عدد الصفحات المحددة للحذف من 31 إلى 27 (-4)." },
+          { en: "Daniel K. was added as the reviewer.", ar: "أُضيف دانيال ك. بصفته المراجع." }
+        ],
+        insertText: {
+          en: "Since audit.xlsx v1, 28 additional pages were audited, four fewer pages are marked for removal, and Daniel K. was added as reviewer.",
+          ar: "منذ الإصدار v1 من audit.xlsx، دُققت 28 صفحة إضافية، وانخفض عدد الصفحات المحددة للحذف بمقدار أربع صفحات، وأُضيف دانيال ك. بصفته المراجع."
+        },
+        clarificationQuestion: {
+          en: "Why did the number of pages marked for removal change from 31 to 27?",
+          ar: "لماذا تغير عدد الصفحات المحددة للحذف من 31 إلى 27؟"
+        },
+        clarificationContext: {
+          en: "The AI comparison of audit.xlsx v1 and v2 detected this change. Please confirm the reason before it is added to the handoff.",
+          ar: "اكتشفت مقارنة الذكاء الاصطناعي بين الإصدارين v1 وv2 من audit.xlsx هذا التغيير. يرجى تأكيد السبب قبل إضافته إلى التسليم."
+        }
+      } },
     { name: "redirects.csv", icon: "document_text_20_regular", current: "v1",
       meta: { en: "Created 30 Oct by Daniel K.", ar: "أُنشئ في 30 أكتوبر بواسطة دانيال ك." },
       versions: [ { v: "v1", st: "current" } ],
@@ -176,6 +197,21 @@ window.DATA = {
     issues: { file: "launch-plan.docx / v1", evidence: { en: "Question: launch date", ar: "سؤال: موعد الإطلاق" }, passage: { en: "“Content freeze starts 5 working days before go-live.”", ar: "«يبدأ تجميد المحتوى قبل 5 أيام عمل من الإطلاق.»" } }
   },
   ai: {
+    projectInsights: [
+      {
+        label: { en: "Recent change", ar: "تغيير حديث" },
+        text: { en: "audit.xlsx v2 expanded the review scope by 28 pages and introduced Daniel K. as reviewer.", ar: "وسّع الإصدار v2 من audit.xlsx نطاق المراجعة بمقدار 28 صفحة وأضاف دانيال ك. بصفته المراجع." }
+      },
+      {
+        label: { en: "Dependency", ar: "اعتماد مترابط" },
+        text: { en: "Redirect testing depends on both a review of redirects.csv v1 and authorized access to the staging environment.", ar: "يعتمد اختبار التحويلات على مراجعة الإصدار v1 من redirects.csv والحصول على وصول مصرح به إلى بيئة الاختبار." }
+      },
+      {
+        label: { en: "Blockers", ar: "العوائق" },
+        text: { en: "The receiver can inspect the audit evidence now, but cannot confirm launch readiness until those dependencies are resolved.", ar: "يمكن للمستلم فحص أدلة التدقيق الآن، لكنه لا يستطيع تأكيد الجاهزية للإطلاق حتى تُحل هذه الاعتمادات." }
+      }
+    ],
+    projectSummarySources: ["audit.xlsx / v2", "redirects.csv / v1", "launch-plan.docx / v1"],
     suggestion: { en: "Mention that redirect testing is still pending and has no evidence yet.", ar: "اذكر أن اختبار التحويلات لا يزال قيد الانتظار ولا توجد له أدلة بعد." },
     insertText: { en: "Redirect testing is still pending and has no evidence yet.", ar: "لا يزال اختبار التحويلات قيد الانتظار ولا توجد له أدلة بعد." },
     source: "redirects.csv / v1",

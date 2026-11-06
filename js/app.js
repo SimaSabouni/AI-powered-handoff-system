@@ -7,9 +7,10 @@
     role: localStorage.getItem("hf-role") || "contributor",
     decision: 0, file: 0, question: 0, section: "summary",
     aiDismissed: false, aiInserted: false,
+    fileAiDismissed: {}, fileAiAdded: {},
     privacy: { hidePrivate: true, allowAI: false },
     next: [false, false],
-    drafts: {}, replies: {}, questionDraft: null
+    drafts: {}, replies: {}, questionDraft: null, questionTemplate: null, questionContext: null
   };
   const app = document.getElementById("app");
   const ui = () => window.UI[state.lang];
@@ -95,53 +96,62 @@
         <h2>${u.projectSummary}</h2>
         <p class="body-text">${L(D.summary)}</p>
       </section>
-      <section class="card">
-        <h2>${u.taskProgress}</h2>
-        <div class="progress-row">
-          <div class="progress">
-            <div class="lbl"><span>${u.complete}</span><b dir="ltr">${done} / ${t.length}</b></div>
-            <div class="bar" role="progressbar" aria-label="${u.complete}" aria-valuenow="${done}" aria-valuemin="0" aria-valuemax="${t.length}"><i style="width:${(done / t.length) * 100}%"></i></div>
-          </div>
-          <div class="progress">
-            <div class="lbl"><span>${u.verified}</span><b dir="ltr">${ver} / ${t.length}</b></div>
-            <div class="bar success" role="progressbar" aria-label="${u.verified}" aria-valuenow="${ver}" aria-valuemin="0" aria-valuemax="${t.length}"><i style="width:${(ver / t.length) * 100}%"></i></div>
-          </div>
+      <section class="card span ai-card overview-ai-card">
+        <div class="card-title">${u.aiProjectSummary}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
+        <div class="ai-insights">${D.ai.projectInsights.map((insight) => `<div><span>${L(insight.label)}</span><p>${L(insight.text)}</p></div>`).join("")}</div>
+        <p class="caption src">${u.basedOn} ${D.ai.projectSummarySources.map((source) => `<button class="link mono" data-openfile="${source.split(" /")[0]}" dir="ltr">${source}</button>`).join(", ")}</p>
+      </section>
+      <div class="overview-columns span">
+        <div class="stack">
+          <section class="card overview-progress">
+            <h2>${u.taskProgress}</h2>
+            <div class="progress-row">
+              <div class="progress">
+                <div class="lbl"><span>${u.complete}</span><b dir="ltr">${done} / ${t.length}</b></div>
+                <div class="bar" role="progressbar" aria-label="${u.complete}" aria-valuenow="${done}" aria-valuemin="0" aria-valuemax="${t.length}"><i style="width:${(done / t.length) * 100}%"></i></div>
+              </div>
+              <div class="progress">
+                <div class="lbl"><span>${u.verified}</span><b dir="ltr">${ver} / ${t.length}</b></div>
+                <div class="bar success" role="progressbar" aria-label="${u.verified}" aria-valuenow="${ver}" aria-valuemin="0" aria-valuemax="${t.length}"><i style="width:${(ver / t.length) * 100}%"></i></div>
+              </div>
+            </div>
+          </section>
+          <section class="card">
+            <h2>${u.taskTable}</h2>
+            <table class="table">
+              <thead><tr><th>${u.colTask}</th><th>${u.colOwner}</th><th>${u.colProgress}</th><th>${u.colVerification}</th><th>${u.colFile}</th></tr></thead>
+              <tbody>
+              ${t.map((x) => `<tr>
+                <td class="name">${L(x.name)}</td><td>${person(x.owner)}</td>
+                <td>${status(x.progress)}</td><td>${status(x.verification)}</td>
+                <td>${x.file === "-" ? status("noEvidence") : `<span class="mono muted" dir="ltr">${x.file}</span>`}</td></tr>`).join("")}
+              </tbody>
+            </table>
+          </section>
         </div>
-      </section>
-      <section class="card">
-        <h2>${u.projectTeam}</h2>
-        <ul class="team-list">
-          <li>${person("sr")}<span class="badge">${u.contributor}</span></li>
-          <li>${person("dk")}<span class="badge">${u.receiver}</span></li>
-        </ul>
-      </section>
-      <section class="card">
-        <h2>${u.taskTable}</h2>
-        <table class="table">
-          <thead><tr><th>${u.colTask}</th><th>${u.colOwner}</th><th>${u.colProgress}</th><th>${u.colVerification}</th><th>${u.colFile}</th></tr></thead>
-          <tbody>
-          ${t.map((x) => `<tr>
-            <td class="name">${L(x.name)}</td><td>${person(x.owner)}</td>
-            <td>${status(x.progress)}</td><td>${status(x.verification)}</td>
-            <td>${x.file === "-" ? status("noEvidence") : `<span class="mono muted" dir="ltr">${x.file}</span>`}</td></tr>`).join("")}
-          </tbody>
-        </table>
-      </section>
-      <div class="stack">
-        <section class="card">
-          <h2>${u.needsAttention}</h2>
-          <div class="msgbar warning">${icon("warning_16_filled")}<div><b>${u.unverifiedTask}</b>${L(unv.name)}</div></div>
-          <div class="msgbar danger">${icon("subtract_circle_16_filled")}<div><b>${u.blocker}</b>${L(blk.name)}</div></div>
-        </section>
-        <section class="card">
-          <h2>${u.nextSteps}</h2>
-          ${[[u.checkEvidence, unv, "decisions"], [u.resumePending, pend, "handover"]].map(([label, task, to], i) => `
-            <label class="check">
-              <input type="checkbox" data-next="${i}" ${state.next[i] ? "checked" : ""}>
-              <span class="box">${icon("checkmark_12_filled")}</span>
-              <span><a class="link" href="#/${to}">${label}</a><span class="caption" style="display:block">${L(task.name)}</span></span>
-            </label>`).join("")}
-        </section>
+        <div class="stack">
+          <section class="card overview-team">
+            <h2>${u.projectTeam}</h2>
+            <ul class="team-list">
+              <li>${person("sr")}<span class="badge">${u.contributor}</span></li>
+              <li>${person("dk")}<span class="badge">${u.receiver}</span></li>
+            </ul>
+          </section>
+          <section class="card">
+            <h2>${u.needsAttention}</h2>
+            <div class="msgbar warning">${icon("warning_16_filled")}<div><b>${u.unverifiedTask}</b>${L(unv.name)}</div></div>
+            <div class="msgbar danger">${icon("subtract_circle_16_filled")}<div><b>${u.blocker}</b>${L(blk.name)}</div></div>
+          </section>
+          <section class="card">
+            <h2>${u.nextSteps}</h2>
+            ${[[u.checkEvidence, unv, "decisions"], [u.resumePending, pend, "handover"]].map(([label, task, to], i) => `
+              <label class="check">
+                <input type="checkbox" data-next="${i}" ${state.next[i] ? "checked" : ""}>
+                <span class="box">${icon("checkmark_12_filled")}</span>
+                <span><a class="link" href="#/${to}">${label}</a><span class="caption" style="display:block">${L(task.name)}</span></span>
+              </label>`).join("")}
+          </section>
+        </div>
       </div>
     </div>`;
   };
@@ -252,6 +262,9 @@
   screens.files = () => {
     const u = ui(), f = D.files[state.file];
     const cmp = f.compare;
+    const aiKey = `${state.file}:${state.lang}`;
+    const showAiComparison = state.role === "contributor" && cmp && f.aiComparison && !state.fileAiDismissed[aiKey];
+    const aiComparisonAdded = state.fileAiAdded[aiKey];
     const pane = (v, rows) => `<div class="cmp-pane"><div class="cmp-head"><span class="mono">${v}</span>${v === f.current ? `<span class="badge brand">${u.st.current}</span>` : `<span class="badge">${u.st.earlier}</span>`}</div>
       <ul>${rows.map((r) => `<li class="${r.changed ? "chg" : ""}">${L(r)}</li>`).join("")}</ul></div>`;
     return `
@@ -279,6 +292,16 @@
           </div>
         </section>
         <section class="card"><h2>${u.comparison}</h2>
+          ${showAiComparison ? `<div class="file-ai-summary">
+            <div class="card-title">${u.aiChangeSummary}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
+            <ul class="change-list">${f.aiComparison.bullets.map((item) => `<li>${L(item)}</li>`).join("")}</ul>
+            <p class="caption src">${u.basedOn} <button class="link mono" data-file="${state.file}" dir="ltr">${f.name} / v1 → ${f.current}</button></p>
+            <div class="acts">
+              <button class="btn" data-file-ai="add" ${aiComparisonAdded ? "disabled" : ""}>${icon("checkmark_20_regular")}${aiComparisonAdded ? u.addedToHandoff : u.addToHandoff}</button>
+              <button class="btn subtle" data-file-ai="dismiss">${u.dismiss}</button>
+              <button class="btn subtle" data-file-ai="clarify">${icon("chat_help_20_regular")}${u.clarify}</button>
+            </div>
+          </div>` : ""}
           ${cmp ? `<div class="cmp">${pane("v1", cmp.v1)}${pane("v2", cmp.v2)}</div>`
                 : `<p class="muted">${state.lang === "ar" ? "يوجد إصدار واحد فقط من هذا الملف." : "This file has only one version."}</p>`}
         </section>
@@ -456,17 +479,52 @@
       const box = document.getElementById("replyBox"), text = box.value.trim();
       if (!text) { box.focus(); return; }
       if (state.questionDraft !== null) {
-        const question = { ...D.ai.clarificationQuestion, [state.lang]: text };
-        D.questions.push({ q: question, from: "sr", body: D.ai.clarificationContext, replies: [] });
+        const template = state.questionTemplate || D.ai.clarificationQuestion;
+        const context = state.questionContext || D.ai.clarificationContext;
+        const question = { ...template, [state.lang]: text };
+        D.questions.push({ q: question, from: "sr", body: context, replies: [] });
         state.question = D.questions.length - 1;
         state.questionDraft = null;
+        state.questionTemplate = null;
+        state.questionContext = null;
       } else {
         (state.replies[state.question] ||= []).push({ from: state.role === "contributor" ? "sr" : "dk", text });
       }
       render(); document.getElementById("replyBox").focus();
     }
     else if (b.dataset.act === "ask") { state.question = 0; location.hash = "#/questions"; setTimeout(() => document.getElementById("replyBox")?.focus(), 0); }
-    else if (b.dataset.act === "clarify-ai") { state.questionDraft = L(D.ai.clarificationQuestion); location.hash = "#/questions"; setTimeout(() => document.getElementById("replyBox")?.focus(), 0); }
+    else if (b.dataset.act === "clarify-ai") {
+      state.questionDraft = L(D.ai.clarificationQuestion);
+      state.questionTemplate = D.ai.clarificationQuestion;
+      state.questionContext = D.ai.clarificationContext;
+      location.hash = "#/questions";
+      setTimeout(() => document.getElementById("replyBox")?.focus(), 0);
+    }
+    else if (b.dataset.fileAi === "dismiss") {
+      state.fileAiDismissed[`${state.file}:${state.lang}`] = true;
+      render();
+    }
+    else if (b.dataset.fileAi === "add") {
+      const f = D.files[state.file];
+      const aiKey = `${state.file}:${state.lang}`;
+      if (!f.aiComparison || state.fileAiAdded[aiKey]) return;
+      saveDraft();
+      const key = `summary:${state.lang}`;
+      const base = state.drafts[key] ?? D.sections.summary[state.lang].map((p) => `<p>${esc(p)}</p>`).join("");
+      state.drafts[key] = base + `<p class="ai-added"><span class="badge ai ai-origin" contenteditable="false">${icon("bot_20_regular")}${ui().aiGenerated}</span><span>${esc(L(f.aiComparison.insertText))}</span></p>`;
+      state.fileAiAdded[aiKey] = true;
+      render();
+      toast(ui().changeSummaryAdded);
+    }
+    else if (b.dataset.fileAi === "clarify") {
+      const f = D.files[state.file];
+      if (!f.aiComparison) return;
+      state.questionDraft = L(f.aiComparison.clarificationQuestion);
+      state.questionTemplate = f.aiComparison.clarificationQuestion;
+      state.questionContext = f.aiComparison.clarificationContext;
+      location.hash = "#/questions";
+      setTimeout(() => document.getElementById("replyBox")?.focus(), 0);
+    }
     else if (b.dataset.act === "request-access") { toast(ui().accessRequestSent); }
     else if (b.dataset.act === "preview") { state.role = "receiver"; localStorage.setItem("hf-role", state.role); location.hash = "#/handover"; render(); }
     else if (b.dataset.act === "share") { toast(ui().sharedToast); }
