@@ -3,12 +3,13 @@
   const I = window.ICONS, D = window.DATA;
   const state = {
     lang: localStorage.getItem("hf-lang") || "en",
+    contentLang: localStorage.getItem("hf-content-lang") || localStorage.getItem("hf-lang") || "en",
     role: localStorage.getItem("hf-role") || "contributor",
     decision: 0, file: 0, question: 0, section: "summary",
     aiDismissed: false, aiInserted: false,
     privacy: { hidePrivate: true, allowAI: false },
     next: [false, false],
-    drafts: {}, replies: {}
+    drafts: {}, replies: {}, questionDraft: null
   };
   const app = document.getElementById("app");
   const ui = () => window.UI[state.lang];
@@ -185,10 +186,11 @@
         <section class="card ai-card" aria-label="${u.aiSuggestion}">
           <div class="card-title">${u.aiSuggestion}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
           <p class="ai-text">${L(D.ai.suggestion)}</p>
-          <p class="caption src">${u.basedOn} <span class="mono" dir="ltr">${D.ai.source}</span></p>
+          <p class="caption src">${u.basedOn} <a class="link mono" href="#/files" data-openfile="${D.ai.source.split(" /")[0]}" dir="ltr">${D.ai.source}</a></p>
           <div class="acts">
             <button class="btn" data-ai="insert">${icon("checkmark_20_regular")}${u.insert}</button>
             <button class="btn subtle" data-ai="dismiss">${u.dismiss}</button>
+            <button class="btn subtle" data-act="clarify-ai">${icon("chat_help_20_regular")}${u.clarify}</button>
           </div>
         </section>` : ""}
       </div>
@@ -292,9 +294,10 @@
       <div class="bubble"><div class="who">${L(p)}</div><p>${esc(text)}</p></div></div>`;
   };
   screens.questions = () => {
-    const u = ui(), q = D.questions[state.question];
-    const extra = state.replies[state.question] || [];
-    const replies = [...q.replies.map((r) => ({ from: r.from, text: L(r.text) })), ...extra];
+    const u = ui(), composing = state.questionDraft !== null;
+    const q = composing ? null : D.questions[state.question];
+    const extra = composing ? [] : (state.replies[state.question] || []);
+    const replies = composing ? [] : [...q.replies.map((r) => ({ from: r.from, text: L(r.text) })), ...extra];
     return `
     <div class="page-head"><h1>${u.nav.questions}</h1></div>
     <div class="g-qa">
@@ -302,11 +305,12 @@
         <div class="vlist" role="tablist" aria-orientation="vertical">
           ${D.questions.map((x, i) => {
             const n = x.replies.length + (state.replies[i] || []).length;
-            return `<button role="tab" data-question="${i}" aria-selected="${i === state.question}">${L(x.q)}<span class="caption">${n ? `${n} ${state.lang === "ar" ? "رد" : n === 1 ? "reply" : "replies"}` : (state.lang === "ar" ? "بلا رد" : "No reply yet")}</span></button>`;
+            return `<button role="tab" data-question="${i}" aria-selected="${!composing && i === state.question}">${L(x.q)}<span class="caption">${n ? `${n} ${state.lang === "ar" ? "رد" : n === 1 ? "reply" : "replies"}` : (state.lang === "ar" ? "بلا رد" : "No reply yet")}</span></button>`;
           }).join("")}
         </div>
       </section>
       <section class="card thread" role="tabpanel"><h2>${u.discussionThread}</h2>
+        ${composing ? "" : `
         <div class="section-label">${L(q.q)}</div>
         ${msg(q.from, L(q.body))}
         ${replies.length ? `<div class="reply-label caption">${u.reply}</div>` : ""}
@@ -315,10 +319,10 @@
         <div class="access-block">
           <div class="msgbar warning">${icon("lock_closed_16_regular")}<div><b>${u.restrictedAccess}</b>${u.credentialsExcluded}</div></div>
           <button class="btn" data-act="request-access">${icon("lock_closed_16_regular")}${u.requestAccess}</button>
-        </div>` : ""}
+        </div>` : ""}`}
         <div class="composer">
           <label for="replyBox" class="sr">${u.writeReply}</label>
-          <textarea id="replyBox" rows="2" placeholder="${u.writeReply}"></textarea>
+          <textarea id="replyBox" rows="2" placeholder="${u.writeReply}">${composing ? esc(state.questionDraft) : ""}</textarea>
           <button class="btn primary" data-act="send">${icon("send_20_filled", "flip")}${u.send}</button>
         </div>
       </section>
@@ -328,16 +332,24 @@
   /* Handover Reader (Receiver) */
   screens.reader = () => {
     const u = ui(), k = state.section, ref = D.refs[k];
+    const draftKey = k + ":" + state.contentLang;
+    const content = state.drafts[draftKey] ?? D.sections[k][state.contentLang].map((p) => `<p>${esc(p)}</p>`).join("");
     return `
     <div class="page-head"><h1>${u.readerTitle}</h1><span class="badge">${icon("lock_closed_16_regular")}${u.readOnly}</span></div>
     <div class="g-three">
       <section class="card min-h"><h2>${u.sections}</h2>${sectionList()}</section>
       <section class="card" role="tabpanel"><h2>${u.readerHeading[k]}</h2>
-        <div class="language-meta">
-          <span class="badge">${u.originalLanguage}: ${u.englishLanguage}</span>
-          ${state.lang === "ar" ? `<span class="badge brand">${u.viewingLanguage}: ${u.arabicTranslation}</span>` : ""}
+        <div class="reader-language">
+          <div class="language-meta">
+            <span class="badge">${u.originalLanguage}: ${u.englishLanguage}</span>
+            ${state.contentLang === "ar" ? `<span class="badge brand">${u.viewingLanguage}: ${u.arabicTranslation}</span>` : ""}
+          </div>
+          <div class="toggle" role="group" aria-label="${u.contentLanguage}">
+            <button data-content-lang="en" aria-pressed="${state.contentLang === "en"}">${u.originalEnglish}</button>
+            <button data-content-lang="ar" aria-pressed="${state.contentLang === "ar"}">${u.arabicTranslation}</button>
+          </div>
         </div>
-        <div class="body-text reading">${D.sections[k][state.lang].map((p) => `<p>${esc(p)}</p>`).join("")}</div>
+        <div class="body-text reading" lang="${state.contentLang}" dir="${state.contentLang === "ar" ? "rtl" : "ltr"}">${content}</div>
       </section>
       <section class="card"><h2>${u.references}</h2>
         <ul class="plist">
@@ -356,12 +368,14 @@
     const u = ui(), t = D.tasks;
     const ver = t.filter((x) => x.verification === "verified");
     const nr = t.filter((x) => x.verification === "needsReview");
+    const unv = t.filter((x) => x.verification === "unverified");
+    const unresolved = t.filter((x) => x.verification !== "verified");
     const box = (key, label) => `<label class="check"><input type="checkbox" data-privacy="${key}" ${state.privacy[key] ? "checked" : ""}><span class="box">${icon("checkmark_12_filled")}</span><span>${label}</span></label>`;
     return `
     <div class="page-head"><h1>${u.reviewTitle}</h1></div>
     <div class="g-review">
       <section class="card span"><h2>${u.readiness}</h2>
-        <div class="msgbar warning">${icon("warning_16_filled")}<div><b>${u.itemsNeedReview}</b></div></div>
+        <div class="msgbar warning">${icon("warning_16_filled")}<div><b>${u.itemsNeedReview(unresolved.length)}</b></div></div>
       </section>
       <section class="card ai-card"><div class="card-title">${u.aiReview}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
         <ul class="plist">
@@ -372,6 +386,7 @@
         <ul class="plist">
           <li><div>${status("verified")}<div class="caption" style="margin-top:2px">${ver.map((x) => L(x.name)).join(", ")}</div></div></li>
           <li><div>${status("needsReview")}<div class="caption" style="margin-top:2px">${nr.map((x) => L(x.name)).join(", ")}</div></div></li>
+          <li><div>${status("unverified")}<div class="caption" style="margin-top:2px">${unv.map((x) => L(x.name)).join(", ")}</div></div></li>
         </ul>
       </section>
       <section class="card span"><h2>${u.privacy}</h2>
@@ -422,6 +437,7 @@
     const b = e.target.closest("button, a");
     if (!b) return;
     if (b.dataset.lang) { saveDraft(); state.lang = b.dataset.lang; localStorage.setItem("hf-lang", state.lang); render(); }
+    else if (b.dataset.contentLang) { state.contentLang = b.dataset.contentLang; localStorage.setItem("hf-content-lang", state.contentLang); render(); }
     else if (b.dataset.role) {
       saveDraft(); state.role = b.dataset.role; localStorage.setItem("hf-role", state.role);
       if (route() !== (location.hash.replace("#/", "") || "overview")) location.hash = "#/overview";
@@ -435,14 +451,22 @@
     }
     else if (b.dataset.decision) { state.decision = +b.dataset.decision; render(); }
     else if (b.dataset.file) { state.file = +b.dataset.file; render(); }
-    else if (b.dataset.question) { state.question = +b.dataset.question; render(); }
+    else if (b.dataset.question) { state.questionDraft = null; state.question = +b.dataset.question; render(); }
     else if (b.dataset.act === "send") {
       const box = document.getElementById("replyBox"), text = box.value.trim();
       if (!text) { box.focus(); return; }
-      (state.replies[state.question] ||= []).push({ from: state.role === "contributor" ? "sr" : "dk", text });
+      if (state.questionDraft !== null) {
+        const question = { ...D.ai.clarificationQuestion, [state.lang]: text };
+        D.questions.push({ q: question, from: "sr", body: D.ai.clarificationContext, replies: [] });
+        state.question = D.questions.length - 1;
+        state.questionDraft = null;
+      } else {
+        (state.replies[state.question] ||= []).push({ from: state.role === "contributor" ? "sr" : "dk", text });
+      }
       render(); document.getElementById("replyBox").focus();
     }
     else if (b.dataset.act === "ask") { state.question = 0; location.hash = "#/questions"; setTimeout(() => document.getElementById("replyBox")?.focus(), 0); }
+    else if (b.dataset.act === "clarify-ai") { state.questionDraft = L(D.ai.clarificationQuestion); location.hash = "#/questions"; setTimeout(() => document.getElementById("replyBox")?.focus(), 0); }
     else if (b.dataset.act === "request-access") { toast(ui().accessRequestSent); }
     else if (b.dataset.act === "preview") { state.role = "receiver"; localStorage.setItem("hf-role", state.role); location.hash = "#/handover"; render(); }
     else if (b.dataset.act === "share") { toast(ui().sharedToast); }
@@ -453,7 +477,7 @@
       saveDraft();
       const key = "summary:" + state.lang;
       const base = state.drafts[key] ?? D.sections.summary[state.lang].map((p) => `<p>${esc(p)}</p>`).join("");
-      state.drafts[key] = base + `<p><ins>${esc(L(D.ai.insertText))}</ins></p>`;
+      state.drafts[key] = base + `<p class="ai-added"><span class="badge ai ai-origin" contenteditable="false">${icon("bot_20_regular")}${ui().aiGenerated}</span><span>${esc(L(D.ai.insertText))}</span></p>`;
       state.aiInserted = true; render();
     }
     else if (b.dataset.act === "save") { saveDraft(); toast(ui().saved); }
@@ -472,6 +496,7 @@
   // Allow ?lang=ar&role=receiver deep links (used for exports)
   const qs = new URLSearchParams(location.search);
   if (qs.get("lang")) state.lang = qs.get("lang");
+  if (qs.get("contentLang")) state.contentLang = qs.get("contentLang");
   if (qs.get("role")) state.role = qs.get("role");
   ["decision", "file", "question"].forEach((k) => { if (qs.get(k)) state[k] = +qs.get(k); });
   if (qs.get("section")) state.section = qs.get("section");

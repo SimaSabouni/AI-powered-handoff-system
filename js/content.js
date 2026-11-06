@@ -27,14 +27,14 @@ window.UI = {
     // Handover
     editorTitle: "Handover Editor", readerTitle: "Handover Reader",
     sections: "Sections", editableContent: "Editable content", references: "References", fileVersion: "File / version", evidenceLink: "Evidence link",
-    aiSuggestion: "AI suggestion", aiGenerated: "AI-generated", insert: "Insert", dismiss: "Dismiss", basedOn: "Based on",
+    aiSuggestion: "AI suggestion", aiGenerated: "AI-generated", insert: "Insert", dismiss: "Dismiss", clarify: "Clarify", basedOn: "Based on",
     save: "Save", reviewBtn: "Review", saved: "Handover saved",
     supportingPassage: "Supporting passage", supportingEvidence: "Supporting evidence", notAttached: "Not attached", inspectSource: "Inspect source", askQuestion: "Ask a question",
-    originalLanguage: "Original", viewingLanguage: "Viewing", englishLanguage: "English", arabicTranslation: "Arabic translation",
+    contentLanguage: "Handover content language", originalLanguage: "Original", viewingLanguage: "Viewing", englishLanguage: "English", originalEnglish: "Original English", arabicTranslation: "Arabic translation",
     sec: { summary: "Summary", completed: "Completed work", remaining: "Remaining work", issues: "Open issues" },
     readerHeading: { summary: "Project summary", completed: "Completed work", remaining: "Remaining work", issues: "Open issues" },
     // Review
-    reviewTitle: "Review & Share", readiness: "Handover readiness", itemsNeedReview: "2 items need review",
+    reviewTitle: "Review & Share", readiness: "Handover readiness", itemsNeedReview: (n) => `${n} ${n === 1 ? "item needs" : "items need"} review`,
     aiReview: "AI review", suggestionToReview: "Suggestion to review", verificationOverview: "Verification overview",
     privacy: "Privacy settings", hidePrivate: "Hide private notes", allowAI: "Allow AI to use restricted files",
     preview: "Preview", share: "Share", sharedToast: "Handover shared with Daniel K.",
@@ -58,13 +58,13 @@ window.UI = {
     restrictedAccess: "وصول مقيّد", credentialsExcluded: "بيانات تسجيل الدخول غير مضمنة في التسليم.", requestAccess: "طلب وصول مصرح به", accessRequestSent: "تم إرسال طلب الوصول",
     editorTitle: "محرر التسليم", readerTitle: "عارض التسليم",
     sections: "الأقسام", editableContent: "المحتوى القابل للتحرير", references: "المراجع", fileVersion: "الملف / الإصدار", evidenceLink: "رابط الدليل",
-    aiSuggestion: "اقتراح الذكاء الاصطناعي", aiGenerated: "مُنشأ بالذكاء الاصطناعي", insert: "إدراج", dismiss: "تجاهل", basedOn: "استنادًا إلى",
+    aiSuggestion: "اقتراح الذكاء الاصطناعي", aiGenerated: "مُنشأ بالذكاء الاصطناعي", insert: "إدراج", dismiss: "تجاهل", clarify: "طلب توضيح", basedOn: "استنادًا إلى",
     save: "حفظ", reviewBtn: "مراجعة", saved: "تم حفظ التسليم",
     supportingPassage: "المقطع الداعم", supportingEvidence: "الدليل الداعم", notAttached: "غير مرفق", inspectSource: "فحص المصدر", askQuestion: "اطرح سؤالًا",
-    originalLanguage: "الأصل", viewingLanguage: "العرض", englishLanguage: "الإنجليزية", arabicTranslation: "ترجمة عربية",
+    contentLanguage: "لغة محتوى التسليم", originalLanguage: "الأصل", viewingLanguage: "العرض", englishLanguage: "الإنجليزية", originalEnglish: "الإنجليزية الأصلية", arabicTranslation: "ترجمة عربية",
     sec: { summary: "الملخص", completed: "العمل المنجز", remaining: "العمل المتبقي", issues: "المشكلات المفتوحة" },
     readerHeading: { summary: "ملخص المشروع", completed: "العمل المنجز", remaining: "العمل المتبقي", issues: "المشكلات المفتوحة" },
-    reviewTitle: "المراجعة والمشاركة", readiness: "جاهزية التسليم", itemsNeedReview: "عنصران يحتاجان إلى مراجعة",
+    reviewTitle: "المراجعة والمشاركة", readiness: "جاهزية التسليم", itemsNeedReview: (n) => n === 1 ? "عنصر واحد يحتاج إلى مراجعة" : n === 2 ? "عنصران يحتاجان إلى مراجعة" : `${n} عناصر تحتاج إلى مراجعة`,
     aiReview: "مراجعة الذكاء الاصطناعي", suggestionToReview: "اقتراح للمراجعة", verificationOverview: "نظرة عامة على التحقق",
     privacy: "إعدادات الخصوصية", hidePrivate: "إخفاء الملاحظات الخاصة", allowAI: "السماح للذكاء الاصطناعي باستخدام الملفات المقيّدة",
     preview: "معاينة", share: "مشاركة", sharedToast: "تمت مشاركة التسليم مع دانيال ك.",
@@ -179,6 +179,8 @@ window.DATA = {
     suggestion: { en: "Mention that redirect testing is still pending and has no evidence yet.", ar: "اذكر أن اختبار التحويلات لا يزال قيد الانتظار ولا توجد له أدلة بعد." },
     insertText: { en: "Redirect testing is still pending and has no evidence yet.", ar: "لا يزال اختبار التحويلات قيد الانتظار ولا توجد له أدلة بعد." },
     source: "redirects.csv / v1",
+    clarificationQuestion: { en: "What evidence is needed for redirect testing?", ar: "ما الدليل المطلوب لاختبار التحويلات؟" },
+    clarificationContext: { en: "The AI flagged redirect testing as pending with no evidence. What should be added before the handover?", ar: "أشار الذكاء الاصطناعي إلى أن اختبار التحويلات لا يزال قيد الانتظار ولا يوجد دليل مرفق. ما الذي يجب إضافته قبل التسليم؟" },
     review: { en: "The summary does not mention that the launch sign-off is blocked.", ar: "لا يذكر الملخص أن اعتماد الإطلاق متوقف." }
   }
 };
