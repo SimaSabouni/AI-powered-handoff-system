@@ -23,7 +23,9 @@
     needsReview: ["warning_16_filled", "st-warning"],
     pending:     ["clock_16_regular", "st-pending"],
     blocked:     ["subtract_circle_16_filled", "st-danger"],
-    unverified:  ["circle_hint_16_regular", "st-none"]
+    unverified:  ["circle_hint_16_regular", "st-none"],
+    disputed:    ["error_circle_16_filled", "st-danger"],
+    noEvidence:  ["warning_16_filled", "st-warning"]
   };
   const status = (k) => `<span class="status ${STATUS[k][1]}">${icon(STATUS[k][0])}${ui().st[k]}</span>`;
   const person = (id) => { const p = D.people[id]; return `<span class="persona"><span class="avatar ${p.cls}" aria-hidden="true">${p.initials}</span>${L(p)}</span>`; };
@@ -105,7 +107,13 @@
           </div>
         </div>
       </section>
-      <div></div>
+      <section class="card">
+        <h2>${u.projectTeam}</h2>
+        <ul class="team-list">
+          <li>${person("sr")}<span class="badge">${u.contributor}</span></li>
+          <li>${person("dk")}<span class="badge">${u.receiver}</span></li>
+        </ul>
+      </section>
       <section class="card">
         <h2>${u.taskTable}</h2>
         <table class="table">
@@ -114,7 +122,7 @@
           ${t.map((x) => `<tr>
             <td class="name">${L(x.name)}</td><td>${person(x.owner)}</td>
             <td>${status(x.progress)}</td><td>${status(x.verification)}</td>
-            <td class="mono muted" dir="ltr">${x.file}</td></tr>`).join("")}
+            <td>${x.file === "-" ? status("noEvidence") : `<span class="mono muted" dir="ltr">${x.file}</span>`}</td></tr>`).join("")}
           </tbody>
         </table>
       </section>
@@ -170,6 +178,7 @@
           <ul class="plist">
             <li>${icon("document_20_regular")}<div><div class="k">${u.fileVersion}</div><a class="link mono" href="#/files" dir="ltr">${ref.file}</a></div></li>
             <li>${icon("link_20_regular")}<div><div class="k">${u.evidenceLink}</div><a class="link" href="#/decisions">${L(ref.evidence)}</a></div></li>
+            ${ref.unsupported ? `<li>${icon("warning_16_filled")}<div><div class="k">${u.supportingEvidence}</div>${status("noEvidence")} · ${u.notAttached}</div></li>` : ""}
           </ul>
         </section>
         ${showAI ? `
@@ -193,6 +202,7 @@
   /* Decisions & Evidence */
   screens.decisions = () => {
     const u = ui(), d = D.decisions[state.decision];
+    const uncertainty = d.uncertainty;
     return `
     <div class="page-head"><h1>${u.nav.decisions}</h1></div>
     <div class="g-three">
@@ -208,10 +218,28 @@
         <hr class="sep">
         <div class="section-label">${u.verificationStatus}</div>
         ${status(d.status)}
+        ${uncertainty ? `
+        <div class="uncertainty-panel">
+          <div class="card-title">${icon("info_16_regular")}${u.uncertaintyDetails}</div>
+          <dl class="detail-list">
+            <div><dt>${u.informationType}</dt><dd>${L(uncertainty.type)}</dd></div>
+            <div><dt>${u.reason}</dt><dd>${L(uncertainty.reason)}</dd></div>
+            <div><dt>${u.impact}</dt><dd>${L(uncertainty.impact)}</dd></div>
+            <div><dt>${u.resolution}</dt><dd>${L(uncertainty.resolution)}</dd></div>
+            <div><dt>${u.verificationRecord}</dt><dd>${L(uncertainty.verification)}</dd></div>
+          </dl>
+          ${uncertainty.conflicts ? `
+          <div class="conflict-box">
+            <div class="section-label">${u.conflictingViews}</div>
+            <ul>${uncertainty.conflicts.map((view) => `<li>${L(view)}</li>`).join("")}</ul>
+          </div>` : ""}
+        </div>` : ""}
       </section>
       <section class="card"><h2>${u.evidence}</h2>
         <ul class="plist">
           <li>${icon("document_20_regular")}<div><div class="k">${u.sourceVersion}</div><a class="link mono" href="#/files" data-openfile="${d.source.split(" /")[0]}" dir="ltr">${d.source}</a></div></li>
+          <li>${icon("person_20_regular")}<div><div class="k">${u.sourceOwner}</div>${person(d.sourceOwner)}</div></li>
+          <li>${icon("calendar_16_regular")}<div><div class="k">${u.sourceDate}</div>${L(d.sourceDate)}</div></li>
           <li>${icon("text_quote_20_regular", "flip")}<div style="min-width:0;flex:1"><div class="k">${u.sourceExcerpt}</div><blockquote class="excerpt" dir="ltr">${esc(L(d.excerpt)).replace(/\n/g, "<br>")}</blockquote></div></li>
         </ul>
       </section>
@@ -306,6 +334,7 @@
         <ul class="plist">
           <li>${icon("document_20_regular")}<div><div class="k">${u.fileVersion}</div><a class="link mono" href="#/files" data-openfile="${ref.file.split(" /")[0]}" dir="ltr">${ref.file}</a></div></li>
           <li>${icon("text_quote_20_regular", "flip")}<div><div class="k">${u.supportingPassage}</div><blockquote class="excerpt prose">${L(ref.passage)}</blockquote></div></li>
+          ${ref.unsupported ? `<li>${icon("warning_16_filled")}<div><div class="k">${u.supportingEvidence}</div>${status("noEvidence")} · ${u.notAttached}</div></li>` : ""}
         </ul>
         <button class="btn" style="margin-top:12px" data-openfile="${ref.file.split(" /")[0]}">${icon("document_search_20_regular")}${u.inspectSource}</button>
       </section>

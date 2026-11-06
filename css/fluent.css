@@ -172,6 +172,28 @@ ul { margin: 0; padding: 0; list-style: none; }
 .st-pending .i { color: var(--colorBrandForeground1); }
 .st-none .i { color: var(--colorNeutralForeground4); }
 
+/* Actionable uncertainty details within a decision */
+.uncertainty-panel {
+  margin-block-start: 16px; padding: 14px 16px;
+  border: 1px solid var(--colorNeutralStroke2); border-radius: var(--borderRadiusLarge);
+  background: var(--colorNeutralBackground2);
+}
+.uncertainty-panel > .card-title { margin-block-end: 10px; }
+.uncertainty-panel > .card-title .i { width: 16px; height: 16px; color: var(--colorBrandForeground1); }
+.detail-list { margin: 0; }
+.detail-list > div { padding-block: 9px; border-block-start: 1px solid var(--colorNeutralStroke3); }
+.detail-list > div:first-child { padding-block-start: 0; border-block-start: 0; }
+.detail-list dt { font: 600 12px/16px var(--fontFamilyBase); color: var(--colorNeutralForeground3); }
+.detail-list dd { margin: 2px 0 0; font-size: 14px; line-height: 20px; color: var(--colorNeutralForeground1); }
+.conflict-box {
+  margin-block-start: 10px; padding: 10px 12px;
+  border: 1px solid var(--colorStatusWarningBorder1); border-radius: var(--borderRadiusMedium);
+  background: var(--colorStatusWarningBackground1);
+}
+.conflict-box .section-label { margin-block-end: 4px; }
+.conflict-box ul { margin: 0; padding-inline-start: 18px; }
+.conflict-box li { padding-block: 2px; line-height: 20px; }
+
 /* Progress bar (Fluent ProgressBar, medium) */
 .progress-row { display: grid; grid-template-columns: repeat(2, minmax(0, 260px)); gap: 40px; }
 .progress .lbl { display: flex; justify-content: space-between; margin-block-end: 6px; }
@@ -193,6 +215,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .avatar.lg { width: 32px; height: 32px; font-size: 12px; }
 .av-sr { background: #fdf0dd; color: #8a3707; }
 .av-dk { background: #e8ebfa; color: #2c3c85; }
+.team-list li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 8px; border-block-start: 1px solid var(--colorNeutralStroke3); }
+.team-list li:first-child { border-block-start: 0; padding-block-start: 0; }
 
 /* MessageBar */
 .msgbar { display: flex; gap: 8px; align-items: flex-start; padding: 10px 12px; border: 1px solid; border-radius: var(--borderRadiusMedium); }
