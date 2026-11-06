@@ -227,6 +227,8 @@ ul { margin: 0; padding: 0; list-style: none; }
 .msgbar.warning .i { color: var(--colorStatusWarningForeground1); }
 .msgbar.danger { background: var(--colorStatusDangerBackground1); border-color: var(--colorStatusDangerBorder1); }
 .msgbar.danger .i { color: var(--colorStatusDangerForeground1); }
+.access-block { margin-block-start: 16px; }
+.access-block > .btn { margin-block-start: 8px; }
 
 /* Checkbox */
 .check { display: flex; gap: 10px; align-items: flex-start; cursor: pointer; padding-block: 6px; }
@@ -302,6 +304,7 @@ ul { margin: 0; padding: 0; list-style: none; }
 [dir="rtl"] .excerpt:not([dir="ltr"]) { font-family: inherit; font-size: 14px; }
 .excerpt[dir="ltr"] { text-align: left; border-inline-start: 0; border-left: 3px solid var(--colorNeutralStroke1); }
 .reading { font-size: 15px; line-height: 24px; }
+.language-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-block-end: 14px; }
 .row-ic { display: inline-flex; align-items: center; gap: 8px; }
 .row-ic .i { color: var(--colorNeutralForeground3); }
 .vlist button[aria-selected="true"] .row-ic .i { color: var(--colorBrandForeground1); }

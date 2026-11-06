@@ -311,6 +311,11 @@
         ${msg(q.from, L(q.body))}
         ${replies.length ? `<div class="reply-label caption">${u.reply}</div>` : ""}
         ${replies.map((r) => msg(r.from, r.text, true)).join("")}
+        ${q.restrictedAccess ? `
+        <div class="access-block">
+          <div class="msgbar warning">${icon("lock_closed_16_regular")}<div><b>${u.restrictedAccess}</b>${u.credentialsExcluded}</div></div>
+          <button class="btn" data-act="request-access">${icon("lock_closed_16_regular")}${u.requestAccess}</button>
+        </div>` : ""}
         <div class="composer">
           <label for="replyBox" class="sr">${u.writeReply}</label>
           <textarea id="replyBox" rows="2" placeholder="${u.writeReply}"></textarea>
@@ -328,6 +333,10 @@
     <div class="g-three">
       <section class="card min-h"><h2>${u.sections}</h2>${sectionList()}</section>
       <section class="card" role="tabpanel"><h2>${u.readerHeading[k]}</h2>
+        <div class="language-meta">
+          <span class="badge">${u.originalLanguage}: ${u.englishLanguage}</span>
+          ${state.lang === "ar" ? `<span class="badge brand">${u.viewingLanguage}: ${u.arabicTranslation}</span>` : ""}
+        </div>
         <div class="body-text reading">${D.sections[k][state.lang].map((p) => `<p>${esc(p)}</p>`).join("")}</div>
       </section>
       <section class="card"><h2>${u.references}</h2>
@@ -434,6 +443,7 @@
       render(); document.getElementById("replyBox").focus();
     }
     else if (b.dataset.act === "ask") { state.question = 0; location.hash = "#/questions"; setTimeout(() => document.getElementById("replyBox")?.focus(), 0); }
+    else if (b.dataset.act === "request-access") { toast(ui().accessRequestSent); }
     else if (b.dataset.act === "preview") { state.role = "receiver"; localStorage.setItem("hf-role", state.role); location.hash = "#/handover"; render(); }
     else if (b.dataset.act === "share") { toast(ui().sharedToast); }
     else if (b.dataset.section) { saveDraft(); state.section = b.dataset.section; render(); }

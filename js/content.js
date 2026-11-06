@@ -23,12 +23,14 @@ window.UI = {
     fileList: "File list", fileDetails: "File details", currentVersion: "Current version", versionHistory: "Version history", comparison: "Comparison",
     // Questions
     questionList: "Question list", discussionThread: "Discussion thread", reply: "Reply", writeReply: "Write a reply", send: "Send",
+    restrictedAccess: "Restricted access", credentialsExcluded: "Login credentials are not included in the handover.", requestAccess: "Request authorized access", accessRequestSent: "Access request sent",
     // Handover
     editorTitle: "Handover Editor", readerTitle: "Handover Reader",
     sections: "Sections", editableContent: "Editable content", references: "References", fileVersion: "File / version", evidenceLink: "Evidence link",
     aiSuggestion: "AI suggestion", aiGenerated: "AI-generated", insert: "Insert", dismiss: "Dismiss", basedOn: "Based on",
     save: "Save", reviewBtn: "Review", saved: "Handover saved",
     supportingPassage: "Supporting passage", supportingEvidence: "Supporting evidence", notAttached: "Not attached", inspectSource: "Inspect source", askQuestion: "Ask a question",
+    originalLanguage: "Original", viewingLanguage: "Viewing", englishLanguage: "English", arabicTranslation: "Arabic translation",
     sec: { summary: "Summary", completed: "Completed work", remaining: "Remaining work", issues: "Open issues" },
     readerHeading: { summary: "Project summary", completed: "Completed work", remaining: "Remaining work", issues: "Open issues" },
     // Review
@@ -53,11 +55,13 @@ window.UI = {
     uncertaintyDetails: "تفاصيل عدم اليقين", informationType: "نوع المعلومة", reason: "سبب عدم اليقين", impact: "التأثير المحتمل", resolution: "كيفية الحل", verificationRecord: "سجل التحقق", conflictingViews: "الآراء المتعارضة",
     fileList: "قائمة الملفات", fileDetails: "تفاصيل الملف", currentVersion: "الإصدار الحالي", versionHistory: "سجل الإصدارات", comparison: "المقارنة",
     questionList: "قائمة الأسئلة", discussionThread: "سلسلة النقاش", reply: "رد", writeReply: "اكتب ردًا", send: "إرسال",
+    restrictedAccess: "وصول مقيّد", credentialsExcluded: "بيانات تسجيل الدخول غير مضمنة في التسليم.", requestAccess: "طلب وصول مصرح به", accessRequestSent: "تم إرسال طلب الوصول",
     editorTitle: "محرر التسليم", readerTitle: "عارض التسليم",
     sections: "الأقسام", editableContent: "المحتوى القابل للتحرير", references: "المراجع", fileVersion: "الملف / الإصدار", evidenceLink: "رابط الدليل",
     aiSuggestion: "اقتراح الذكاء الاصطناعي", aiGenerated: "مُنشأ بالذكاء الاصطناعي", insert: "إدراج", dismiss: "تجاهل", basedOn: "استنادًا إلى",
     save: "حفظ", reviewBtn: "مراجعة", saved: "تم حفظ التسليم",
     supportingPassage: "المقطع الداعم", supportingEvidence: "الدليل الداعم", notAttached: "غير مرفق", inspectSource: "فحص المصدر", askQuestion: "اطرح سؤالًا",
+    originalLanguage: "الأصل", viewingLanguage: "العرض", englishLanguage: "الإنجليزية", arabicTranslation: "ترجمة عربية",
     sec: { summary: "الملخص", completed: "العمل المنجز", remaining: "العمل المتبقي", issues: "المشكلات المفتوحة" },
     readerHeading: { summary: "ملخص المشروع", completed: "العمل المنجز", remaining: "العمل المتبقي", issues: "المشكلات المفتوحة" },
     reviewTitle: "المراجعة والمشاركة", readiness: "جاهزية التسليم", itemsNeedReview: "عنصران يحتاجان إلى مراجعة",
@@ -150,7 +154,7 @@ window.DATA = {
     { q: { en: "Are blog posts in scope?", ar: "هل التدوينات ضمن النطاق؟" }, from: "dk",
       body: { en: "The audit lists 40 blog posts. Do they move in this phase or the next one?", ar: "يذكر التدقيق 40 تدوينة. هل تُنقل في هذه المرحلة أم في المرحلة التالية؟" },
       replies: [] },
-    { q: { en: "Where is the staging login?", ar: "أين بيانات الدخول إلى بيئة الاختبار؟" }, from: "dk",
+    { q: { en: "Where is the staging login?", ar: "أين بيانات الدخول إلى بيئة الاختبار؟" }, from: "dk", restrictedAccess: true,
       body: { en: "I need access to staging to continue redirect testing.", ar: "أحتاج إلى الوصول إلى بيئة الاختبار لمتابعة اختبار التحويلات." },
       replies: [] }
   ],
