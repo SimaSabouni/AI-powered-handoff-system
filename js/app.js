@@ -1,10 +1,15 @@
 /* Handoff prototype: tiny hash router + render functions. No build step. */
 (() => {
   const I = window.ICONS, D = window.DATA;
+  // Preferences are optional so downloaded file:// previews also work in private mode.
+  const readPreference = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
+  const writePreference = (key, value) => { try { localStorage.setItem(key, value); } catch { /* Preview only. */ } };
+  let meaningTrigger = null;
+
   const state = {
-    lang: localStorage.getItem("hf-lang") || "en",
-    contentLang: localStorage.getItem("hf-content-lang") || localStorage.getItem("hf-lang") || "en",
-    role: localStorage.getItem("hf-role") || "contributor",
+    lang: readPreference("hf-lang") || "en",
+    contentLang: readPreference("hf-content-lang") || readPreference("hf-lang") || "en",
+    role: readPreference("hf-role") || "contributor",
     decision: 0, file: 0, question: 0, section: "summary",
     aiDismissed: false, aiInserted: false,
     fileAiDismissed: {}, fileAiAdded: {},
@@ -17,6 +22,16 @@
   const L = (o) => (o && typeof o === "object" && !Array.isArray(o) ? o[state.lang] : o);
   const icon = (n, cls = "") => (I[n] || "").replace('class="i"', `class="i ${cls}"`);
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // Only authored markers become interactive. Escape surrounding text before rendering.
+  const plainText = (text) => String(text).replace(/\[\[([a-z]+)\]\]/g,
+    (match, key) => D.meanings[key]?.word || match);
+  const richText = (text) => esc(text).replace(/\[\[([a-z]+)\]\]/g, (match, key) => {
+    const term = D.meanings[key];
+    if (!term) return match;
+    return `<button type="button" class="ambiguous-term" data-term="${key}" contenteditable="false" lang="ar" dir="rtl" aria-haspopup="dialog" aria-expanded="false" aria-controls="term-meanings" aria-label="${esc(ui().meaningAction)} ${esc(term.word)}">${esc(term.word)}</button>`;
+  });
+  const meaningHint = () => `<p class="meaning-hint">${icon("local_language_20_regular")}<span>${ui().meaningHint}</span></p>`;
 
   // Status → Fluent icon. Each state has a different shape, not only a different colour.
   const STATUS = {
@@ -64,9 +79,9 @@
         <button data-lang="en" aria-pressed="${state.lang === "en"}" lang="en">EN</button>
         <button data-lang="ar" aria-pressed="${state.lang === "ar"}" lang="ar">عربي</button>
       </div>
-      <div class="toggle" role="group" aria-label="${u.roleLabel}">
-        <button data-role="contributor" aria-pressed="${state.role === "contributor"}">${u.contributor}</button>
-        <button data-role="receiver" aria-pressed="${state.role === "receiver"}">${u.receiver}</button>
+      <div class="toggle role-toggle" role="group" aria-label="${u.roleLabel}">
+        <button data-role="contributor" aria-pressed="${state.role === "contributor"}">${L(D.people.sima)} · ${u.contributor}</button>
+        <button data-role="receiver" aria-pressed="${state.role === "receiver"}">${L(D.people.yumna)} · ${u.receiver}</button>
       </div>
     </header>
     <nav class="nav" aria-label="Main">
@@ -76,6 +91,7 @@
       }).join("")}
     </nav>
     <main class="page" id="page">${content}</main>
+    <aside class="meaning-popover" id="term-meanings" role="dialog" aria-modal="false" aria-labelledby="meaning-title" aria-describedby="meaning-warning" hidden></aside>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>`;
   }
 
@@ -90,15 +106,15 @@
     const blk = t.find((x) => x.progress === "blocked");
     const pend = t.find((x) => x.progress === "pending");
     return `
-    <div class="page-head"><h1>${u.nav.overview}</h1></div>
+    <div class="page-head"><div><h1>${u.nav.overview}</h1><p class="course-label">${u.course}</p></div></div>
     <div class="g-overview">
       <section class="card span">
         <h2>${u.projectSummary}</h2>
-        <p class="body-text">${L(D.summary)}</p>
+        <p class="body-text">${richText(L(D.summary))}</p>${meaningHint()}
       </section>
       <section class="card span ai-card overview-ai-card">
         <div class="card-title">${u.aiProjectSummary}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
-        <div class="ai-insights">${D.ai.projectInsights.map((insight) => `<div><span>${L(insight.label)}</span><p>${L(insight.text)}</p></div>`).join("")}</div>
+        <div class="ai-insights">${D.ai.projectInsights.map((insight) => `<div><span>${L(insight.label)}</span><p>${richText(L(insight.text))}</p></div>`).join("")}</div>
         <p class="caption src">${u.basedOn} ${D.ai.projectSummarySources.map((source) => `<button class="link mono" data-openfile="${source.split(" /")[0]}" dir="ltr">${source}</button>`).join(", ")}</p>
       </section>
       <div class="overview-columns span">
@@ -118,7 +134,7 @@
           </section>
           <section class="card">
             <h2>${u.taskTable}</h2>
-            <table class="table">
+            <div class="table-scroll"><table class="table">
               <thead><tr><th>${u.colTask}</th><th>${u.colOwner}</th><th>${u.colProgress}</th><th>${u.colVerification}</th><th>${u.colFile}</th></tr></thead>
               <tbody>
               ${t.map((x) => `<tr>
@@ -126,15 +142,15 @@
                 <td>${status(x.progress)}</td><td>${status(x.verification)}</td>
                 <td>${x.file === "-" ? status("noEvidence") : `<span class="mono muted" dir="ltr">${x.file}</span>`}</td></tr>`).join("")}
               </tbody>
-            </table>
+            </table></div>
           </section>
         </div>
         <div class="stack">
           <section class="card overview-team">
             <h2>${u.projectTeam}</h2>
             <ul class="team-list">
-              <li>${person("sr")}<span class="badge">${u.contributor}</span></li>
-              <li>${person("dk")}<span class="badge">${u.receiver}</span></li>
+              <li>${person("sima")}<span class="badge">${u.contributor}</span></li>
+              <li>${person("yumna")}<span class="badge">${u.receiver}</span></li>
             </ul>
           </section>
           <section class="card">
@@ -167,14 +183,14 @@
   screens.editor = () => {
     const u = ui(), k = state.section, ref = D.refs[k];
     const draftKey = k + ":" + state.lang;
-    const paras = state.drafts[draftKey] ?? D.sections[k][state.lang].map((p) => `<p>${esc(p)}</p>`).join("");
+    const paras = state.drafts[draftKey] ?? D.sections[k][state.lang].map((p) => `<p>${richText(p)}</p>`).join("");
     const showAI = k === "summary" && !state.aiDismissed && !state.aiInserted;
     return `
     <div class="page-head"><h1>${u.editorTitle}</h1></div>
     <div class="g-three">
       <section class="card min-h"><h2>${u.sections}</h2>${sectionList()}</section>
       <section class="card col-card">
-        <h2>${u.editableContent}</h2>
+        <h2>${u.editableContent}</h2>${meaningHint()}
         <div class="toolbar" role="toolbar">
           <button class="btn subtle small" aria-label="${u.bold}" data-cmd="bold"><b style="width:16px">B</b></button>
           <button class="btn subtle small" aria-label="${u.italic}" data-cmd="italic"><i style="width:16px;font-family:Georgia,serif">I</i></button>
@@ -195,7 +211,7 @@
         ${showAI ? `
         <section class="card ai-card" aria-label="${u.aiSuggestion}">
           <div class="card-title">${u.aiSuggestion}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
-          <p class="ai-text">${L(D.ai.suggestion)}</p>
+          <p class="ai-text">${richText(L(D.ai.suggestion))}</p>
           <p class="caption src">${u.basedOn} <a class="link mono" href="#/files" data-openfile="${D.ai.source.split(" /")[0]}" dir="ltr">${D.ai.source}</a></p>
           <div class="acts">
             <button class="btn" data-ai="insert">${icon("checkmark_20_regular")}${u.insert}</button>
@@ -226,7 +242,7 @@
       <section class="card" role="tabpanel">
         <h2>${L(d.title)}</h2>
         <div class="section-label">${u.rationale}</div>
-        <p class="body-text">${L(d.rationale)}</p>
+        <p class="body-text">${richText(L(d.rationale))}</p>
         <hr class="sep">
         <div class="section-label">${u.verificationStatus}</div>
         ${status(d.status)}
@@ -314,7 +330,7 @@
     const p = D.people[from];
     return `<div class="msg ${isReply ? "reply" : ""}">
       <span class="avatar lg ${p.cls}" aria-hidden="true">${p.initials}</span>
-      <div class="bubble"><div class="who">${L(p)}</div><p>${esc(text)}</p></div></div>`;
+      <div class="bubble"><div class="who">${L(p)}</div><p>${richText(text)}</p></div></div>`;
   };
   screens.questions = () => {
     const u = ui(), composing = state.questionDraft !== null;
@@ -328,13 +344,13 @@
         <div class="vlist" role="tablist" aria-orientation="vertical">
           ${D.questions.map((x, i) => {
             const n = x.replies.length + (state.replies[i] || []).length;
-            return `<button role="tab" data-question="${i}" aria-selected="${!composing && i === state.question}">${L(x.q)}<span class="caption">${n ? `${n} ${state.lang === "ar" ? "رد" : n === 1 ? "reply" : "replies"}` : (state.lang === "ar" ? "بلا رد" : "No reply yet")}</span></button>`;
+            return `<button role="tab" data-question="${i}" aria-selected="${!composing && i === state.question}">${esc(plainText(L(x.q)))}<span class="caption">${n ? `${n} ${state.lang === "ar" ? "رد" : n === 1 ? "reply" : "replies"}` : (state.lang === "ar" ? "بلا رد" : "No reply yet")}</span></button>`;
           }).join("")}
         </div>
       </section>
       <section class="card thread" role="tabpanel"><h2>${u.discussionThread}</h2>
         ${composing ? "" : `
-        <div class="section-label">${L(q.q)}</div>
+        <div class="section-label">${esc(plainText(L(q.q)))}</div>
         ${msg(q.from, L(q.body))}
         ${replies.length ? `<div class="reply-label caption">${u.reply}</div>` : ""}
         ${replies.map((r) => msg(r.from, r.text, true)).join("")}
@@ -344,8 +360,8 @@
           <button class="btn" data-act="request-access">${icon("lock_closed_16_regular")}${u.requestAccess}</button>
         </div>` : ""}`}
         <div class="composer">
-          <label for="replyBox" class="sr">${u.writeReply}</label>
-          <textarea id="replyBox" rows="2" placeholder="${u.writeReply}">${composing ? esc(state.questionDraft) : ""}</textarea>
+          <label for="replyBox" class="sima">${u.writeReply}</label>
+          <textarea id="replyBox" rows="2" placeholder="${u.writeReply}">${composing ? esc(plainText(state.questionDraft)) : ""}</textarea>
           <button class="btn primary" data-act="send">${icon("send_20_filled", "flip")}${u.send}</button>
         </div>
       </section>
@@ -356,7 +372,7 @@
   screens.reader = () => {
     const u = ui(), k = state.section, ref = D.refs[k];
     const draftKey = k + ":" + state.contentLang;
-    const content = state.drafts[draftKey] ?? D.sections[k][state.contentLang].map((p) => `<p>${esc(p)}</p>`).join("");
+    const content = state.drafts[draftKey] ?? D.sections[k][state.contentLang].map((p) => `<p>${richText(p)}</p>`).join("");
     return `
     <div class="page-head"><h1>${u.readerTitle}</h1><span class="badge">${icon("lock_closed_16_regular")}${u.readOnly}</span></div>
     <div class="g-three">
@@ -372,7 +388,7 @@
             <button data-content-lang="ar" aria-pressed="${state.contentLang === "ar"}">${u.arabicTranslation}</button>
           </div>
         </div>
-        <div class="body-text reading" lang="${state.contentLang}" dir="${state.contentLang === "ar" ? "rtl" : "ltr"}">${content}</div>
+        ${state.contentLang === "en" ? meaningHint() : ""}<div class="body-text reading" lang="${state.contentLang}" dir="${state.contentLang === "ar" ? "rtl" : "ltr"}">${content}</div>
       </section>
       <section class="card"><h2>${u.references}</h2>
         <ul class="plist">
@@ -402,7 +418,7 @@
       </section>
       <section class="card ai-card"><div class="card-title">${u.aiReview}<span class="badge ai end">${icon("bot_20_regular")}${u.aiGenerated}</span></div>
         <ul class="plist">
-          <li>${icon("info_16_regular")}<div><div class="k">${u.suggestionToReview}</div>${L(D.ai.review)}</div></li>
+          <li>${icon("info_16_regular")}<div><div class="k">${u.suggestionToReview}</div>${richText(L(D.ai.review))}</div></li>
         </ul>
       </section>
       <section class="card"><h2>${u.verificationOverview}</h2>
@@ -436,11 +452,17 @@
 
   /* ---------- Render + events ---------- */
   function render() {
+    closeMeanings();
     document.documentElement.lang = state.lang;
     document.documentElement.dir = state.lang === "ar" ? "rtl" : "ltr";
     const r = route();
     document.title = `${ui().nav[r]} · Handoff`;
     app.innerHTML = shell(screens[r](), r);
+    // Draft HTML may have been written in another interface language.
+    app.querySelectorAll("[data-term]").forEach((button) => {
+      button.setAttribute("aria-expanded", "false");
+      button.setAttribute("aria-label", `${ui().meaningAction} ${D.meanings[button.dataset.term].word}`);
+    });
   }
 
   function toast(msg) {
@@ -453,16 +475,92 @@
 
   function saveDraft() {
     const ed = document.getElementById("editor");
-    if (ed) state.drafts[state.section + ":" + state.lang] = ed.innerHTML;
+    if (ed) {
+      const copy = ed.cloneNode(true);
+      copy.querySelectorAll("[data-term]").forEach((button) => button.setAttribute("aria-expanded", "false"));
+      state.drafts[state.section + ":" + state.lang] = copy.innerHTML;
+    }
   }
+
+  /* Static, contextual meaning suggestions. Nothing is sent to a server. */
+  function closeMeanings(restoreFocus = false) {
+    const trigger = meaningTrigger;
+    meaningTrigger = null;
+    document.getElementById("term-meanings")?.setAttribute("hidden", "");
+    trigger?.setAttribute("aria-expanded", "false");
+    if (restoreFocus && trigger?.isConnected) trigger.focus({ preventScroll: true });
+  }
+
+  function positionMeanings() {
+    if (!meaningTrigger?.isConnected) { closeMeanings(); return; }
+    const panel = document.getElementById("term-meanings");
+    if (!panel || panel.hidden) return;
+    const rect = meaningTrigger.getBoundingClientRect();
+    const pageRect = document.getElementById("page").getBoundingClientRect();
+    const width = document.documentElement.clientWidth;
+    const height = document.documentElement.clientHeight;
+    if (rect.bottom < Math.max(0, pageRect.top) || rect.top > Math.min(height, pageRect.bottom) || rect.right < 0 || rect.left > width) {
+      closeMeanings(); return;
+    }
+    const size = panel.getBoundingClientRect(), gap = 10, edge = 12;
+    const start = state.lang === "ar" ? rect.right - size.width : rect.left;
+    const left = Math.max(edge, Math.min(start, width - size.width - edge));
+    let top = rect.bottom + gap;
+    if (top + size.height > height - edge) top = rect.top - size.height - gap;
+    top = Math.max(edge, Math.min(top, height - size.height - edge));
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
+  }
+
+  function openMeanings(trigger) {
+    if (meaningTrigger === trigger) { closeMeanings(true); return; }
+    closeMeanings();
+    const term = D.meanings[trigger.dataset.term];
+    if (!term) return;
+    const u = ui(), panel = document.getElementById("term-meanings");
+    panel.innerHTML = `
+      <div class="meaning-notice"><p id="meaning-warning">${icon("sparkle_16_regular")}${u.meaningWarning}</p>
+        <button type="button" class="meaning-close" data-act="close-meanings" aria-label="${u.closeMeanings}"><span aria-hidden="true">×</span></button>
+      </div>
+      <div class="meaning-content">
+        <h2 id="meaning-title">${u.meaningTitle} <bdi class="meaning-word" lang="ar" dir="rtl">${term.word}</bdi></h2>
+        <p class="meaning-intro">${u.meaningIntro}</p>
+        <ol class="meaning-options">${term.options.map((option, i) => `
+          <li><span class="meaning-number" aria-hidden="true">${i + 1}</span><div><h3>${esc(L(option.title))}</h3><p>${esc(L(option.description))}</p></div></li>
+        `).join("")}</ol>
+      </div>
+      <p class="meaning-footer">${u.meaningFooter}</p>`;
+    meaningTrigger = trigger;
+    trigger.setAttribute("aria-expanded", "true");
+    panel.hidden = false;
+    positionMeanings();
+    panel.querySelector("button").focus({ preventScroll: true });
+  }
+
+  document.addEventListener("pointerdown", (e) => {
+    if (meaningTrigger && !e.target.closest("#term-meanings, [data-term]")) closeMeanings();
+  });
+  document.addEventListener("focusin", (e) => {
+    if (meaningTrigger && !e.target.closest("#term-meanings, [data-term]")) closeMeanings();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (!meaningTrigger) return;
+    if (e.key === "Escape") { e.preventDefault(); closeMeanings(true); }
+    // Resume the page's natural tab order from the word that opened the dialog.
+    else if (e.key === "Tab") closeMeanings(true);
+  });
+  window.addEventListener("resize", positionMeanings);
+  document.addEventListener("scroll", positionMeanings, true);
 
   app.addEventListener("click", (e) => {
     const b = e.target.closest("button, a");
     if (!b) return;
-    if (b.dataset.lang) { saveDraft(); state.lang = b.dataset.lang; localStorage.setItem("hf-lang", state.lang); render(); }
-    else if (b.dataset.contentLang) { state.contentLang = b.dataset.contentLang; localStorage.setItem("hf-content-lang", state.contentLang); render(); }
+    if (b.dataset.term) { e.preventDefault(); openMeanings(b); return; }
+    if (b.dataset.act === "close-meanings") { closeMeanings(true); return; }
+    if (b.dataset.lang) { saveDraft(); state.lang = b.dataset.lang; writePreference("hf-lang", state.lang); render(); }
+    else if (b.dataset.contentLang) { state.contentLang = b.dataset.contentLang; writePreference("hf-content-lang", state.contentLang); render(); }
     else if (b.dataset.role) {
-      saveDraft(); state.role = b.dataset.role; localStorage.setItem("hf-role", state.role);
+      saveDraft(); state.role = b.dataset.role; writePreference("hf-role", state.role);
       if (route() !== (location.hash.replace("#/", "") || "overview")) location.hash = "#/overview";
       render();
     }
@@ -482,13 +580,13 @@
         const template = state.questionTemplate || D.ai.clarificationQuestion;
         const context = state.questionContext || D.ai.clarificationContext;
         const question = { ...template, [state.lang]: text };
-        D.questions.push({ q: question, from: "sr", body: context, replies: [] });
+        D.questions.push({ q: question, from: state.role === "contributor" ? "sima" : "yumna", body: context, replies: [] });
         state.question = D.questions.length - 1;
         state.questionDraft = null;
         state.questionTemplate = null;
         state.questionContext = null;
       } else {
-        (state.replies[state.question] ||= []).push({ from: state.role === "contributor" ? "sr" : "dk", text });
+        (state.replies[state.question] ||= []).push({ from: state.role === "contributor" ? "sima" : "yumna", text });
       }
       render(); document.getElementById("replyBox").focus();
     }
@@ -510,8 +608,8 @@
       if (!f.aiComparison || state.fileAiAdded[aiKey]) return;
       saveDraft();
       const key = `summary:${state.lang}`;
-      const base = state.drafts[key] ?? D.sections.summary[state.lang].map((p) => `<p>${esc(p)}</p>`).join("");
-      state.drafts[key] = base + `<p class="ai-added"><span class="badge ai ai-origin" contenteditable="false">${icon("bot_20_regular")}${ui().aiGenerated}</span><span>${esc(L(f.aiComparison.insertText))}</span></p>`;
+      const base = state.drafts[key] ?? D.sections.summary[state.lang].map((p) => `<p>${richText(p)}</p>`).join("");
+      state.drafts[key] = base + `<p class="ai-added"><span class="badge ai ai-origin" contenteditable="false">${icon("bot_20_regular")}${ui().aiGenerated}</span><span>${richText(L(f.aiComparison.insertText))}</span></p>`;
       state.fileAiAdded[aiKey] = true;
       render();
       toast(ui().changeSummaryAdded);
@@ -526,7 +624,7 @@
       setTimeout(() => document.getElementById("replyBox")?.focus(), 0);
     }
     else if (b.dataset.act === "request-access") { toast(ui().accessRequestSent); }
-    else if (b.dataset.act === "preview") { state.role = "receiver"; localStorage.setItem("hf-role", state.role); location.hash = "#/handover"; render(); }
+    else if (b.dataset.act === "preview") { state.role = "receiver"; writePreference("hf-role", state.role); location.hash = "#/handover"; render(); }
     else if (b.dataset.act === "share") { toast(ui().sharedToast); }
     else if (b.dataset.section) { saveDraft(); state.section = b.dataset.section; render(); }
     else if (b.dataset.cmd) { e.preventDefault(); document.execCommand(b.dataset.cmd); }
@@ -534,8 +632,8 @@
     else if (b.dataset.ai === "insert") {
       saveDraft();
       const key = "summary:" + state.lang;
-      const base = state.drafts[key] ?? D.sections.summary[state.lang].map((p) => `<p>${esc(p)}</p>`).join("");
-      state.drafts[key] = base + `<p class="ai-added"><span class="badge ai ai-origin" contenteditable="false">${icon("bot_20_regular")}${ui().aiGenerated}</span><span>${esc(L(D.ai.insertText))}</span></p>`;
+      const base = state.drafts[key] ?? D.sections.summary[state.lang].map((p) => `<p>${richText(p)}</p>`).join("");
+      state.drafts[key] = base + `<p class="ai-added"><span class="badge ai ai-origin" contenteditable="false">${icon("bot_20_regular")}${ui().aiGenerated}</span><span>${richText(L(D.ai.insertText))}</span></p>`;
       state.aiInserted = true; render();
     }
     else if (b.dataset.act === "save") { saveDraft(); toast(ui().saved); }
@@ -545,7 +643,7 @@
     if (e.target.dataset.next !== undefined) state.next[+e.target.dataset.next] = e.target.checked;
     if (e.target.dataset.privacy) state.privacy[e.target.dataset.privacy] = e.target.checked;
   });
-  app.addEventListener("mousedown", (e) => { if (e.target.closest("[data-cmd]")) e.preventDefault(); });
+  app.addEventListener("mousedown", (e) => { if (e.target.closest("[data-cmd], .editor [data-term]")) e.preventDefault(); });
   app.addEventListener("keydown", (e) => {
     if (e.target.id === "replyBox" && e.key === "Enter" && (e.ctrlKey || e.metaKey)) document.querySelector('[data-act="send"]').click();
   });
@@ -558,5 +656,13 @@
   if (qs.get("role")) state.role = qs.get("role");
   ["decision", "file", "question"].forEach((k) => { if (qs.get(k)) state[k] = +qs.get(k); });
   if (qs.get("section")) state.section = qs.get("section");
+  if (!["en", "ar"].includes(state.lang)) state.lang = "en";
+  if (!["en", "ar"].includes(state.contentLang)) state.contentLang = state.lang;
+  if (!["contributor", "receiver"].includes(state.role)) state.role = "contributor";
+  if (!sectionKeys.includes(state.section)) state.section = "summary";
+  [["decision", D.decisions], ["file", D.files], ["question", D.questions]].forEach(([key, values]) => {
+    if (!Number.isInteger(state[key]) || !values[state[key]]) state[key] = 0;
+  });
   render();
 })();
+
