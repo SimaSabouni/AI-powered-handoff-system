@@ -1,10 +1,16 @@
-/* All interface strings and project content, in English and Arabic.
-   Structure and labels follow the low-fidelity wireframe one-to-one;
-   only placeholders (Task A, File A, Decision A ...) were given real values. */
+/* Bilingual labels and authored sample data for a software engineering group project.
+   All AI text and term meanings are static prototype fixtures; no model is called. */
 
 window.UI = {
   en: {
-    project: "Website migration",
+    project: "Campus Task Manager",
+    course: "Software Engineering · Group project",
+    meaningHint: "Underlined Arabic terms may have more than one meaning. Click a term to explore.",
+    meaningWarning: "These recommendations are AI generated.",
+    meaningTitle: "Possible meanings", meaningIntro: "The intended meaning depends on the context.",
+    meaningFooter: "Confirm the intended meaning with your teammate.",
+    closeMeanings: "Close meanings", meaningAction: "Explore possible meanings of",
+
     draft: "Draft", shared: "Shared", readOnly: "Read-only",
     contributor: "Contributor", receiver: "Receiver",
     langLabel: "Language", roleLabel: "Role",
@@ -31,18 +37,25 @@ window.UI = {
     aiSuggestion: "AI suggestion", aiGenerated: "AI-generated", insert: "Insert", dismiss: "Dismiss", clarify: "Clarify", basedOn: "Based on",
     save: "Save", reviewBtn: "Review", saved: "Handover saved",
     supportingPassage: "Supporting passage", supportingEvidence: "Supporting evidence", notAttached: "Not attached", inspectSource: "Inspect source", askQuestion: "Ask a question",
-    contentLanguage: "Handover content language", originalLanguage: "Original", viewingLanguage: "Viewing", englishLanguage: "English", originalEnglish: "Original English", arabicTranslation: "Arabic translation",
+    contentLanguage: "Handover content language", originalLanguage: "Original", viewingLanguage: "Viewing", englishLanguage: "English + Arabic", originalEnglish: "Original mixed text", arabicTranslation: "Arabic translation",
     sec: { summary: "Summary", completed: "Completed work", remaining: "Remaining work", issues: "Open issues" },
     readerHeading: { summary: "Project summary", completed: "Completed work", remaining: "Remaining work", issues: "Open issues" },
     // Review
     reviewTitle: "Review & Share", readiness: "Handover readiness", itemsNeedReview: (n) => `${n} ${n === 1 ? "item needs" : "items need"} review`,
     aiReview: "AI review", suggestionToReview: "Suggestion to review", verificationOverview: "Verification overview",
     privacy: "Privacy settings", hidePrivate: "Hide private notes", allowAI: "Allow AI to use restricted files",
-    preview: "Preview", share: "Share", sharedToast: "Handover shared with Daniel K.",
+    preview: "Preview", share: "Share", sharedToast: "Handover shared with Yumna Salaas",
     tasks1: "1 task", bold: "Bold", italic: "Italic", bullets: "Bulleted list", attach: "Attach reference"
   },
   ar: {
-    project: "ترحيل الموقع الإلكتروني",
+    project: "نظام إدارة مهام الطلاب",
+    course: "هندسة البرمجيات · مشروع جماعي",
+    meaningHint: "قد تحمل الكلمات العربية المميزة بخط سفلي أكثر من معنى. اضغط على الكلمة لاستكشاف المعاني.",
+    meaningWarning: "هذه التوصيات مولّدة بالذكاء الاصطناعي.",
+    meaningTitle: "المعاني المحتملة", meaningIntro: "يعتمد المعنى المقصود على السياق.",
+    meaningFooter: "تأكد من المعنى المقصود مع زميلتك.",
+    closeMeanings: "إغلاق المعاني", meaningAction: "استكشاف المعاني المحتملة لكلمة",
+
     draft: "مسودة", shared: "تمت المشاركة", readOnly: "للقراءة فقط",
     contributor: "المساهم", receiver: "المستلم",
     langLabel: "اللغة", roleLabel: "الدور",
@@ -63,160 +76,164 @@ window.UI = {
     aiSuggestion: "اقتراح الذكاء الاصطناعي", aiGenerated: "مُنشأ بالذكاء الاصطناعي", insert: "إدراج", dismiss: "تجاهل", clarify: "طلب توضيح", basedOn: "استنادًا إلى",
     save: "حفظ", reviewBtn: "مراجعة", saved: "تم حفظ التسليم",
     supportingPassage: "المقطع الداعم", supportingEvidence: "الدليل الداعم", notAttached: "غير مرفق", inspectSource: "فحص المصدر", askQuestion: "اطرح سؤالًا",
-    contentLanguage: "لغة محتوى التسليم", originalLanguage: "الأصل", viewingLanguage: "العرض", englishLanguage: "الإنجليزية", originalEnglish: "الإنجليزية الأصلية", arabicTranslation: "ترجمة عربية",
+    contentLanguage: "لغة محتوى التسليم", originalLanguage: "الأصل", viewingLanguage: "العرض", englishLanguage: "الإنجليزية والعربية", originalEnglish: "النص المختلط الأصلي", arabicTranslation: "ترجمة عربية",
     sec: { summary: "الملخص", completed: "العمل المنجز", remaining: "العمل المتبقي", issues: "المشكلات المفتوحة" },
     readerHeading: { summary: "ملخص المشروع", completed: "العمل المنجز", remaining: "العمل المتبقي", issues: "المشكلات المفتوحة" },
     reviewTitle: "المراجعة والمشاركة", readiness: "جاهزية التسليم", itemsNeedReview: (n) => n === 1 ? "عنصر واحد يحتاج إلى مراجعة" : n === 2 ? "عنصران يحتاجان إلى مراجعة" : `${n} عناصر تحتاج إلى مراجعة`,
     aiReview: "مراجعة الذكاء الاصطناعي", suggestionToReview: "اقتراح للمراجعة", verificationOverview: "نظرة عامة على التحقق",
     privacy: "إعدادات الخصوصية", hidePrivate: "إخفاء الملاحظات الخاصة", allowAI: "السماح للذكاء الاصطناعي باستخدام الملفات المقيّدة",
-    preview: "معاينة", share: "مشاركة", sharedToast: "تمت مشاركة التسليم مع دانيال ك.",
+    preview: "معاينة", share: "مشاركة", sharedToast: "تمت مشاركة التسليم مع يمنى سلاس",
     tasks1: "مهمة واحدة", bold: "غامق", italic: "مائل", bullets: "قائمة نقطية", attach: "إرفاق مرجع"
   }
 };
 
-/* Project content. Each text value is { en, ar }. */
+/* Only explicitly marked occurrences ([[model]], [[interface]], [[approval]])
+   become clickable. Ordinary Arabic text is never automatically flagged. */
 window.DATA = {
   people: {
-    sr: { en: "Sara R.", ar: "سارة ر.", initials: "SR", cls: "av-sr" },
-    dk: { en: "Daniel K.", ar: "دانيال ك.", initials: "DK", cls: "av-dk" }
+    sima: { en: "Sima Sabouni", ar: "سيما صابوني", initials: "SS", cls: "av-sima" },
+    yumna: { en: "Yumna Salaas", ar: "يمنى سلاس", initials: "YS", cls: "av-yumna" }
+  },
+  meanings: {
+    model: {
+      word: "نموذج",
+      options: [
+        { title: { en: "Prototype", ar: "نموذج أولي" }, description: { en: "An early version used to demonstrate the task manager before implementation.", ar: "نسخة أولية لتوضيح نظام إدارة المهام قبل تنفيذه." } },
+        { title: { en: "Data model", ar: "نموذج بيانات" }, description: { en: "A representation of tasks, students, and the relationships between them.", ar: "تمثيل للمهام والطلاب والعلاقات بينهم." } },
+        { title: { en: "Form or template", ar: "استمارة أو قالب" }, description: { en: "A structured form to fill in, such as the task creation form.", ar: "استمارة منظمة لتعبئة المعلومات، مثل استمارة إنشاء مهمة." } }
+      ]
+    },
+    interface: {
+      word: "واجهة",
+      options: [
+        { title: { en: "User interface", ar: "واجهة مستخدم" }, description: { en: "The screens and controls students interact with in the task manager.", ar: "الشاشات وعناصر التحكم التي يتفاعل معها الطلاب في نظام إدارة المهام." } },
+        { title: { en: "API / software interface", ar: "واجهة برمجية" }, description: { en: "The contract that lets the frontend request or update task data.", ar: "العقد الذي يتيح للواجهة الأمامية طلب بيانات المهام أو تحديثها." } },
+        { title: { en: "Frontend", ar: "الجزء الأمامي من التطبيق" }, description: { en: "The client-side implementation, including screen logic and interactions.", ar: "تنفيذ جانب العميل، بما فيه منطق الشاشات والتفاعلات." } }
+      ]
+    },
+    approval: {
+      word: "اعتماد",
+      options: [
+        { title: { en: "Approval / sign-off", ar: "موافقة أو إقرار" }, description: { en: "Formal acceptance of the project scope or a deliverable.", ar: "الموافقة الرسمية على نطاق المشروع أو أحد مخرجاته." } },
+        { title: { en: "Dependency / reliance", ar: "اعتماد على شيء آخر" }, description: { en: "Work that relies on another task, component, or resource being ready.", ar: "عمل يتوقف على جاهزية مهمة أو مكوّن أو مورد آخر." } },
+        { title: { en: "Adoption", ar: "تبنّي أو اختيار" }, description: { en: "Choosing a design or approach for the group project.", ar: "اختيار تصميم أو نهج للعمل به في المشروع الجماعي." } }
+      ]
+    }
   },
   summary: {
-    en: "Moving the company website from the old CMS to the new platform. The content audit and redirect map are done; redirect testing and the launch sign-off remain.",
-    ar: "نقل موقع الشركة من نظام إدارة المحتوى القديم إلى المنصة الجديدة. اكتمل تدقيق المحتوى وخريطة التحويلات، ويتبقى اختبار التحويلات واعتماد الإطلاق."
+    en: "Sima Sabouni and Yumna Salaas are building Campus Task Manager for their Software Engineering course group project. Requirements are verified and the [[model]] is ready for review; integration testing and final submission are still open.",
+    ar: "تعمل سيما صابوني ويمنى سلاس على نظام إدارة مهام الطلاب ضمن مشروع جماعي لمقرر هندسة البرمجيات. تم التحقق من المتطلبات والنموذج الأولي جاهز للمراجعة، بينما لا يزال اختبار التكامل والتسليم النهائي قيد الانتظار."
   },
-  // Task A-D from the wireframe, with the same owners and statuses
   tasks: [
-    { name: { en: "Content audit", ar: "تدقيق المحتوى" }, owner: "sr", progress: "complete", verification: "verified", file: "audit.xlsx / v2" },
-    { name: { en: "Redirect map", ar: "خريطة التحويلات" }, owner: "dk", progress: "complete", verification: "needsReview", file: "redirects.csv / v1" },
-    { name: { en: "Redirect testing", ar: "اختبار التحويلات" }, owner: "sr", progress: "pending", verification: "unverified", file: "-" },
-    { name: { en: "Launch sign-off", ar: "اعتماد الإطلاق" }, owner: "dk", progress: "blocked", verification: "unverified", file: "-" }
+    { name: { en: "Requirements specification", ar: "توصيف المتطلبات" }, owner: "sima", progress: "complete", verification: "verified", file: "requirements.xlsx / v2" },
+    { name: { en: "Task board prototype", ar: "النموذج الأولي للوحة المهام" }, owner: "yumna", progress: "complete", verification: "needsReview", file: "prototype-notes.docx / v1" },
+    { name: { en: "Integration testing", ar: "اختبار التكامل" }, owner: "yumna", progress: "pending", verification: "unverified", file: "-" },
+    { name: { en: "Final course submission", ar: "التسليم النهائي للمقرر" }, owner: "sima", progress: "blocked", verification: "unverified", file: "-" }
   ],
-  // Decision A-C
   decisions: [
-    { title: { en: "Use 301 redirects", ar: "استخدام تحويلات 301" },
-      rationale: { en: "Permanent redirects keep search rankings and old bookmarks working after launch. Temporary redirects would have to be replaced later.", ar: "تحافظ التحويلات الدائمة على ترتيب البحث والإشارات المرجعية القديمة بعد الإطلاق. أما التحويلات المؤقتة فسيلزم استبدالها لاحقًا." },
-      status: "needsReview", source: "redirects.csv / v1", sourceOwner: "dk", sourceDate: { en: "30 Oct", ar: "30 أكتوبر" },
+    { title: { en: "Use a shared task board", ar: "استخدام لوحة مهام مشتركة" },
+      rationale: { en: "A shared board lets students assign tasks, track progress, and see upcoming deadlines. Review the [[interface]] before integration testing begins.", ar: "تتيح اللوحة المشتركة للطلاب إسناد المهام ومتابعة التقدم ومواعيد التسليم. يجب مراجعة واجهة المستخدم قبل بدء اختبار التكامل." },
+      status: "needsReview", source: "prototype-notes.docx / v1", sourceOwner: "yumna", sourceDate: { en: "30 Oct", ar: "30 أكتوبر" },
       uncertainty: {
-        type: { en: "Evidence-backed proposal", ar: "اقتراح مدعوم بأدلة" },
-        reason: { en: "The redirect map has not yet been tested on the staging site.", ar: "لم تُختبر خريطة التحويلات على موقع الاختبار بعد." },
-        impact: { en: "Incorrect redirects could break old links or reduce search visibility after launch.", ar: "قد تؤدي التحويلات غير الصحيحة إلى تعطّل الروابط القديمة أو انخفاض الظهور في نتائج البحث بعد الإطلاق." },
-        resolution: { en: "Test a representative sample on staging, then approve the redirect map.", ar: "اختبار عينة ممثلة على موقع الاختبار، ثم اعتماد خريطة التحويلات." },
-        verification: { en: "Review assigned to Sara R.; method: staging redirect test.", ar: "أُسندت المراجعة إلى سارة ر.؛ الأسلوب: اختبار التحويلات على موقع الاختبار." }
+        type: { en: "Design proposal", ar: "اقتراح تصميم" },
+        reason: { en: "Sima has not yet reviewed the task creation and assignment flows against the requirements.", ar: "لم تراجع سيما بعد مساري إنشاء المهام وإسنادها وفقًا للمتطلبات." },
+        impact: { en: "Missing interactions could cause integration failures or an incomplete course demo.", ar: "قد تؤدي التفاعلات الناقصة إلى فشل التكامل أو عرض غير مكتمل للمشروع." },
+        resolution: { en: "Sima and Yumna should walk through the prototype together and record the review in the prototype notes.", ar: "ينبغي لسيما ويمنى تجربة النموذج الأولي معًا وتوثيق المراجعة في ملاحظاته." },
+        verification: { en: "Review assigned to Sima Sabouni; method: walkthrough against the requirements checklist.", ar: "أُسندت المراجعة إلى سيما صابوني؛ الأسلوب: تجربة المسارات وفق قائمة المتطلبات." }
       },
-      excerpt: { en: "/about-us → /company/about, 301\n/news/2023 → /newsroom, 301", ar: "/about-us → /company/about, 301\n/news/2023 → /newsroom, 301" } },
-    { title: { en: "Keep URL structure", ar: "الإبقاء على بنية الروابط" },
-      rationale: { en: "Most pages keep their current path, so only 27 pages need a redirect. This lowers the testing effort before launch.", ar: "تحتفظ معظم الصفحات بمسارها الحالي، لذا تحتاج 27 صفحة فقط إلى تحويل. وهذا يقلل جهد الاختبار قبل الإطلاق." },
-      status: "verified", source: "audit.xlsx / v2", sourceOwner: "sr", sourceDate: { en: "3 Nov", ar: "3 نوفمبر" },
+      excerpt: { en: "Create task → assign teammate → update status.\nPrototype review: pending.", ar: "إنشاء مهمة ← إسنادها لزميلة ← تحديث الحالة.\nمراجعة النموذج الأولي: قيد الانتظار." } },
+    { title: { en: "Keep the first version focused", ar: "تحديد نطاق الإصدار الأول" },
+      rationale: { en: "The course project covers 12 requirements for task creation, assignment, and progress tracking. Notifications are reserved for a later version.", ar: "يغطي مشروع المقرر 12 متطلبًا لإنشاء المهام وإسنادها ومتابعة تقدمها. أُجّلت الإشعارات إلى إصدار لاحق." },
+      status: "verified", source: "requirements.xlsx / v2", sourceOwner: "sima", sourceDate: { en: "3 Nov", ar: "3 نوفمبر" },
       uncertainty: {
-        type: { en: "Verified evidence", ar: "دليل تم التحقق منه" },
-        reason: { en: "No remaining uncertainty. The latest audit confirms the affected page counts.", ar: "لا يوجد عدم يقين متبقٍ. يؤكد أحدث تدقيق أعداد الصفحات المتأثرة." },
-        impact: { en: "Low. The verified counts define the redirect scope.", ar: "منخفض. تحدد الأعداد المتحقق منها نطاق التحويلات." },
-        resolution: { en: "No further action required unless the page inventory changes.", ar: "لا يلزم إجراء إضافي ما لم تتغير قائمة الصفحات." },
-        verification: { en: "Verified by Daniel K. through a manual audit review on 3 Nov.", ar: "تحقق منه دانيال ك. من خلال مراجعة يدوية للتدقيق في 3 نوفمبر." }
+        type: { en: "Verified requirements", ar: "متطلبات تم التحقق منها" },
+        reason: { en: "Yumna reviewed all 12 requirements against the course brief.", ar: "راجعت يمنى المتطلبات الـ12 وفق وصف مشروع المقرر." },
+        impact: { en: "The agreed scope guides implementation and the integration test checklist.", ar: "يوجّه النطاق المتفق عليه التنفيذ وقائمة اختبارات التكامل." },
+        resolution: { en: "Revisit only if the course requirements change.", ar: "تُعاد المراجعة فقط إذا تغيرت متطلبات المقرر." },
+        verification: { en: "Verified by Yumna Salaas in a checklist review on 3 Nov.", ar: "تحققت يمنى سلاس من المتطلبات باستخدام قائمة مراجعة في 3 نوفمبر." }
       },
-      excerpt: { en: "Pages kept: 187\nPages redirected: 27", ar: "الصفحات المُبقاة: 187\nالصفحات المحوّلة: 27" } },
-    { title: { en: "Freeze content before launch", ar: "تجميد المحتوى قبل الإطلاق" },
-      rationale: { en: "No page edits in the final week, so the redirect tests run against content that will not change.", ar: "لا تعديلات على الصفحات في الأسبوع الأخير، حتى تُجرى اختبارات التحويل على محتوى لن يتغير." },
-      status: "disputed", source: "launch-plan.docx / v1", sourceOwner: "sr", sourceDate: { en: "14 Oct", ar: "14 أكتوبر" },
+      excerpt: { en: "In-scope requirements: 12\nReviewer: Yumna Salaas\nNotifications: future version", ar: "المتطلبات ضمن النطاق: 12\nالمراجعة: يمنى سلاس\nالإشعارات: إصدار لاحق" } },
+    { title: { en: "Freeze features before the demo", ar: "إيقاف إضافة الميزات قبل العرض" },
+      rationale: { en: "A feature freeze leaves time to test the group project and prepare the course demo. The freeze period still needs agreement.", ar: "يتيح إيقاف إضافة الميزات وقتًا لاختبار المشروع الجماعي والتحضير لعرض المقرر. لم يُتفق على مدة الإيقاف بعد." },
+      status: "disputed", source: "submission-plan.docx / v1", sourceOwner: "sima", sourceDate: { en: "4 Nov", ar: "4 نوفمبر" },
       uncertainty: {
         type: { en: "Planning assumption", ar: "افتراض تخطيطي" },
-        reason: { en: "The launch plan proposes a five-working-day freeze, while the communications team has suggested three days. The final period has not been approved.", ar: "تقترح خطة الإطلاق تجميد المحتوى لمدة خمسة أيام عمل، بينما اقترح فريق الاتصال ثلاثة أيام. لم تُعتمد المدة النهائية بعد." },
-        impact: { en: "Redirect testing may start too early or leave too little time before launch.", ar: "قد يبدأ اختبار التحويلات مبكرًا جدًا أو لا يترك وقتًا كافيًا قبل الإطلاق." },
-        resolution: { en: "Confirm the freeze period at the launch meeting and update the launch plan.", ar: "تأكيد مدة التجميد في اجتماع الإطلاق وتحديث خطة الإطلاق." },
-        verification: { en: "Not verified; no final approver or verification method is recorded.", ar: "لم يتم التحقق؛ لم يُسجل معتمد نهائي أو أسلوب للتحقق." },
+        reason: { en: "Sima proposes three days for testing; Yumna proposes two days to allow more implementation time.", ar: "تقترح سيما ثلاثة أيام للاختبار؛ وتقترح يمنى يومين لإتاحة وقت أطول للتنفيذ." },
+        impact: { en: "An unresolved freeze date may leave too little time for testing and the final report.", ar: "قد يؤدي عدم حسم موعد الإيقاف إلى نقص الوقت المتاح للاختبار والتقرير النهائي." },
+        resolution: { en: "Agree on the freeze period during the next group meeting and update the submission plan.", ar: "الاتفاق على مدة الإيقاف في اجتماع المجموعة القادم وتحديث خطة التسليم." },
+        verification: { en: "Not verified; Sima and Yumna have not recorded a shared decision.", ar: "لم يتم التحقق؛ لم تسجل سيما ويمنى قرارًا مشتركًا بعد." },
         conflicts: [
-          { en: "Sara R.: freeze content for 5 working days.", ar: "سارة ر.: تجميد المحتوى لمدة 5 أيام عمل." },
-          { en: "Communications team: 3 working days should be sufficient.", ar: "فريق الاتصال: يُفترض أن تكون 3 أيام عمل كافية." }
+          { en: "Sima Sabouni: freeze features three days before the demo.", ar: "سيما صابوني: إيقاف إضافة الميزات قبل العرض بثلاثة أيام." },
+          { en: "Yumna Salaas: two days should be enough for testing.", ar: "يمنى سلاس: يومان يكفيان للاختبار." }
         ]
       },
-      excerpt: { en: "Content freeze starts 5 working days before go-live.", ar: "يبدأ تجميد المحتوى قبل 5 أيام عمل من الإطلاق." } }
+      excerpt: { en: "Proposed feature freeze: 3 days before the demo.\nFinal submission: blocked pending test evidence and the agreed freeze period.", ar: "المدة المقترحة لإيقاف إضافة الميزات: 3 أيام قبل العرض.\nالتسليم النهائي: متوقف حتى إرفاق أدلة الاختبار والاتفاق على مدة الإيقاف." } }
   ],
-  // File A-C
   files: [
-    { name: "audit.xlsx", icon: "document_table_20_regular", current: "v2",
-      meta: { en: "Updated 3 Nov by Sara R.", ar: "حُدّث في 3 نوفمبر بواسطة سارة ر." },
+    { name: "requirements.xlsx", icon: "document_table_20_regular", current: "v2",
+      meta: { en: "Updated 3 Nov by Sima Sabouni", ar: "حُدّث في 3 نوفمبر بواسطة سيما صابوني" },
       versions: [ { v: "v2", st: "current" }, { v: "v1", st: "earlier" } ],
       compare: {
-        v1: [ { en: "Pages audited: 186", ar: "الصفحات المدققة: 186" }, { en: "Pages to remove: 31", ar: "صفحات للحذف: 31" }, { en: "Reviewer: none", ar: "المراجع: لا يوجد" } ],
-        v2: [ { en: "Pages audited: 214", ar: "الصفحات المدققة: 214", changed: true }, { en: "Pages to remove: 27", ar: "صفحات للحذف: 27", changed: true }, { en: "Reviewer: Daniel K.", ar: "المراجع: دانيال ك.", changed: true } ] },
+        v1: [ { en: "Requirements documented: 9", ar: "المتطلبات الموثقة: 9" }, { en: "Acceptance criteria: 6", ar: "معايير القبول: 6" }, { en: "Reviewer: none", ar: "المراجعة: لا توجد" } ],
+        v2: [ { en: "Requirements documented: 12", ar: "المتطلبات الموثقة: 12", changed: true }, { en: "Acceptance criteria: 12", ar: "معايير القبول: 12", changed: true }, { en: "Reviewer: Yumna Salaas", ar: "المراجعة: يمنى سلاس", changed: true } ] },
       aiComparison: {
         bullets: [
-          { en: "Pages audited increased from 186 to 214 (+28).", ar: "ارتفع عدد الصفحات المدققة من 186 إلى 214 (+28)." },
-          { en: "Pages marked for removal decreased from 31 to 27 (-4).", ar: "انخفض عدد الصفحات المحددة للحذف من 31 إلى 27 (-4)." },
-          { en: "Daniel K. was added as the reviewer.", ar: "أُضيف دانيال ك. بصفته المراجع." }
+          { en: "Documented requirements increased from 9 to 12 (+3).", ar: "ارتفع عدد المتطلبات الموثقة من 9 إلى 12 (+3)." },
+          { en: "Acceptance criteria increased from 6 to 12 (+6).", ar: "ارتفع عدد معايير القبول من 6 إلى 12 (+6)." },
+          { en: "Yumna Salaas was added as the reviewer.", ar: "أُضيفت يمنى سلاس بصفتها المراجعة." }
         ],
-        insertText: {
-          en: "Since audit.xlsx v1, 28 additional pages were audited, four fewer pages are marked for removal, and Daniel K. was added as reviewer.",
-          ar: "منذ الإصدار v1 من audit.xlsx، دُققت 28 صفحة إضافية، وانخفض عدد الصفحات المحددة للحذف بمقدار أربع صفحات، وأُضيف دانيال ك. بصفته المراجع."
-        },
-        clarificationQuestion: {
-          en: "Why did the number of pages marked for removal change from 31 to 27?",
-          ar: "لماذا تغير عدد الصفحات المحددة للحذف من 31 إلى 27؟"
-        },
-        clarificationContext: {
-          en: "The AI comparison of audit.xlsx v1 and v2 detected this change. Please confirm the reason before it is added to the handoff.",
-          ar: "اكتشفت مقارنة الذكاء الاصطناعي بين الإصدارين v1 وv2 من audit.xlsx هذا التغيير. يرجى تأكيد السبب قبل إضافته إلى التسليم."
-        }
+        insertText: { en: "Since requirements.xlsx v1, three requirements and six acceptance criteria were added, and Yumna Salaas reviewed the specification. Recheck the [[model]] against this updated scope.", ar: "منذ الإصدار v1 من requirements.xlsx، أُضيفت ثلاثة متطلبات وستة معايير قبول، وراجعت يمنى سلاس التوصيف. يجب إعادة فحص النموذج الأولي وفق هذا النطاق المحدّث." },
+        clarificationQuestion: { en: "Which three requirements were added in v2?", ar: "ما المتطلبات الثلاثة التي أُضيفت في الإصدار v2؟" },
+        clarificationContext: { en: "The comparison of requirements.xlsx v1 and v2 shows three additional requirements. Please confirm their impact on the prototype and tests.", ar: "تُظهر مقارنة الإصدارين v1 وv2 من requirements.xlsx إضافة ثلاثة متطلبات. يرجى تأكيد أثرها على النموذج الأولي والاختبارات." }
       } },
-    { name: "redirects.csv", icon: "document_text_20_regular", current: "v1",
-      meta: { en: "Created 30 Oct by Daniel K.", ar: "أُنشئ في 30 أكتوبر بواسطة دانيال ك." },
-      versions: [ { v: "v1", st: "current" } ],
-      compare: null },
-    { name: "launch-plan.docx", icon: "document_20_regular", current: "v1",
-      meta: { en: "Created 14 Oct by Sara R.", ar: "أُنشئ في 14 أكتوبر بواسطة سارة ر." },
-      versions: [ { v: "v1", st: "current" } ],
-      compare: null }
+    { name: "prototype-notes.docx", icon: "document_text_20_regular", current: "v1",
+      meta: { en: "Created 30 Oct by Yumna Salaas", ar: "أُنشئ في 30 أكتوبر بواسطة يمنى سلاس" },
+      versions: [ { v: "v1", st: "current" } ], compare: null },
+    { name: "submission-plan.docx", icon: "document_20_regular", current: "v1",
+      meta: { en: "Updated 4 Nov by Sima Sabouni", ar: "حُدّث في 4 نوفمبر بواسطة سيما صابوني" },
+      versions: [ { v: "v1", st: "current" } ], compare: null }
   ],
-  // Question A-C
   questions: [
-    { q: { en: "Who approves the launch date?", ar: "من يعتمد موعد الإطلاق؟" }, from: "dk",
-      body: { en: "The launch sign-off task is blocked. Who needs to approve the date before we can go live?", ar: "مهمة اعتماد الإطلاق متوقفة. من يجب أن يعتمد الموعد قبل أن نطلق الموقع؟" },
-      replies: [ { from: "sr", text: { en: "The communications team. I asked them on 28 Oct and have not heard back yet.", ar: "فريق الاتصال. سألتهم في 28 أكتوبر ولم يصلني رد بعد." } } ] },
-    { q: { en: "Are blog posts in scope?", ar: "هل التدوينات ضمن النطاق؟" }, from: "dk",
-      body: { en: "The audit lists 40 blog posts. Do they move in this phase or the next one?", ar: "يذكر التدقيق 40 تدوينة. هل تُنقل في هذه المرحلة أم في المرحلة التالية؟" },
-      replies: [] },
-    { q: { en: "Where is the staging login?", ar: "أين بيانات الدخول إلى بيئة الاختبار؟" }, from: "dk", restrictedAccess: true,
-      body: { en: "I need access to staging to continue redirect testing.", ar: "أحتاج إلى الوصول إلى بيئة الاختبار لمتابعة اختبار التحويلات." },
-      replies: [] }
+    { q: { en: "What is blocking the final submission?", ar: "ما الذي يعوق التسليم النهائي؟" }, from: "yumna",
+      body: { en: "The handover says we still need [[approval]] before submission. Does that mean a sign-off, or a dependency on unfinished work?", ar: "تذكر ملاحظات التسليم أننا نحتاج إلى اعتماد قبل التسليم النهائي. هل المقصود الموافقة أم الاعتماد على عمل لم يكتمل؟" },
+      replies: [ { from: "sima", text: { en: "I mean our joint sign-off after integration tests pass. We also need to agree on the feature freeze period.", ar: "أقصد موافقتنا المشتركة بعد اجتياز اختبارات التكامل. نحتاج أيضًا إلى الاتفاق على مدة إيقاف إضافة الميزات." } } ] },
+    { q: { en: "Are notifications part of this version?", ar: "هل الإشعارات ضمن هذا الإصدار؟" }, from: "yumna",
+      body: { en: "I will keep notifications out of this version, as requirements.xlsx v2 specifies. Should we mention them as future work in the report?", ar: "سأستبعد الإشعارات من هذا الإصدار وفق requirements.xlsx v2. هل نذكرها كعمل مستقبلي في التقرير؟" }, replies: [] },
+    { q: { en: "How do I access the test environment?", ar: "كيف أصل إلى بيئة الاختبار؟" }, from: "yumna", restrictedAccess: true,
+      body: { en: "I need access to our shared test environment to continue integration testing.", ar: "أحتاج إلى الوصول إلى بيئة الاختبار المشتركة لمتابعة اختبار التكامل." }, replies: [] }
   ],
-  // Handover sections
   sections: {
-    summary: { en: ["We are moving the company website from the old CMS to the new platform.", "The content audit and redirect map are done. Redirect testing and the launch sign-off are still open."],
-               ar: ["ننقل موقع الشركة من نظام إدارة المحتوى القديم إلى المنصة الجديدة.", "اكتمل تدقيق المحتوى وخريطة التحويلات. ولا يزال اختبار التحويلات واعتماد الإطلاق مفتوحين."] },
-    completed: { en: ["Content audit of all 214 pages, verified by Daniel K.", "Redirect map for the 27 changed URLs. It still needs review."],
-                 ar: ["تدقيق محتوى جميع الصفحات الـ214، وتحقق منه دانيال ك.", "خريطة تحويلات لـ27 رابطًا تغيّر. ولا تزال تحتاج إلى مراجعة."] },
-    remaining: { en: ["Test every redirect on the staging site.", "Get the launch sign-off from the communications team."],
-                 ar: ["اختبار كل تحويل على موقع الاختبار.", "الحصول على اعتماد الإطلاق من فريق الاتصال."] },
-    issues: { en: ["The launch sign-off is blocked until the communications team confirms a date."],
-              ar: ["اعتماد الإطلاق متوقف حتى يؤكد فريق الاتصال موعدًا."] }
+    summary: {
+      en: ["Sima Sabouni and Yumna Salaas are developing Campus Task Manager as a group project for their Software Engineering course.", "The requirements specification is verified and the [[model]] is ready for review. Sima is handing over the project context to Yumna for integration testing and demo preparation.", "Final submission is blocked until test evidence is attached and we agree on the feature freeze period."],
+      ar: ["تطوّر سيما صابوني ويمنى سلاس نظام إدارة مهام الطلاب كمشروع جماعي لمقرر هندسة البرمجيات.", "تم التحقق من توصيف المتطلبات والنموذج الأولي جاهز للمراجعة. تسلّم سيما سياق المشروع إلى يمنى لمتابعة اختبار التكامل والتحضير للعرض.", "التسليم النهائي متوقف حتى إرفاق أدلة الاختبار والاتفاق على مدة إيقاف إضافة الميزات."] },
+    completed: {
+      en: ["Sima Sabouni documented all 12 requirements and acceptance criteria; Yumna Salaas verified them against the course brief.", "Yumna completed the task board [[interface]]. Sima still needs to review the creation and assignment flows."],
+      ar: ["وثقت سيما صابوني المتطلبات الـ12 ومعايير القبول؛ وتحققت يمنى سلاس منها وفق وصف مشروع المقرر.", "أكملت يمنى واجهة لوحة المهام. لا تزال سيما بحاجة إلى مراجعة مساري الإنشاء والإسناد."] },
+    remaining: {
+      en: ["Review the [[interface]] together before Yumna starts integration testing.", "Attach the test results, then agree on the feature freeze period and prepare the final report and course demo."],
+      ar: ["مراجعة واجهة المستخدم معًا قبل أن تبدأ يمنى اختبار التكامل.", "إرفاق نتائج الاختبارات، ثم الاتفاق على مدة إيقاف إضافة الميزات وإعداد التقرير النهائي وعرض المقرر."] },
+    issues: {
+      en: ["The final submission still needs [[approval]] after testing. Confirm the intended meaning and record who is responsible.", "Sima proposes a three-day feature freeze; Yumna proposes two days. The group has not agreed yet."],
+      ar: ["لا يزال التسليم النهائي بحاجة إلى الموافقة بعد الاختبار. يجب تأكيد المعنى المقصود وتوثيق المسؤولية.", "تقترح سيما إيقاف إضافة الميزات لثلاثة أيام؛ وتقترح يمنى يومين. لم تتفق المجموعة بعد."] }
   },
   refs: {
-    summary: { file: "audit.xlsx / v2", evidence: { en: "Content audit sign-off", ar: "اعتماد تدقيق المحتوى" }, passage: { en: "“All 214 pages reviewed; 27 need a redirect.”", ar: "«تمت مراجعة جميع الصفحات الـ214، و27 منها تحتاج إلى تحويل.»" } },
-    completed: { file: "audit.xlsx / v2", evidence: { en: "Content audit sign-off", ar: "اعتماد تدقيق المحتوى" }, passage: { en: "“Reviewer: Daniel K.”", ar: "«المراجع: دانيال ك.»" } },
-    remaining: { file: "redirects.csv / v1", evidence: { en: "Redirect map", ar: "خريطة التحويلات" }, passage: { en: "“/about-us → /company/about, 301”", ar: "«/about-us → /company/about, 301»" }, unsupported: true },
-    issues: { file: "launch-plan.docx / v1", evidence: { en: "Question: launch date", ar: "سؤال: موعد الإطلاق" }, passage: { en: "“Content freeze starts 5 working days before go-live.”", ar: "«يبدأ تجميد المحتوى قبل 5 أيام عمل من الإطلاق.»" } }
+    summary: { file: "requirements.xlsx / v2", evidence: { en: "Requirements review", ar: "مراجعة المتطلبات" }, passage: { en: "“12 requirements and 12 acceptance criteria documented; reviewer: Yumna Salaas.”", ar: "«توثيق 12 متطلبًا و12 معيار قبول؛ المراجعة: يمنى سلاس.»" } },
+    completed: { file: "prototype-notes.docx / v1", evidence: { en: "Task board walkthrough", ar: "تجربة لوحة المهام" }, passage: { en: "“Create task → assign teammate → update status. Prototype review: pending.”", ar: "«إنشاء مهمة ← إسنادها لزميلة ← تحديث الحالة. مراجعة النموذج الأولي: قيد الانتظار.»" } },
+    remaining: { file: "prototype-notes.docx / v1", evidence: { en: "Integration test preparation", ar: "التحضير لاختبار التكامل" }, passage: { en: "“Review the task creation and assignment flows before integration testing.”", ar: "«مراجعة مساري إنشاء المهام وإسنادها قبل اختبار التكامل.»" }, unsupported: true },
+    issues: { file: "submission-plan.docx / v1", evidence: { en: "Feature freeze discussion", ar: "نقاش إيقاف إضافة الميزات" }, passage: { en: "“Proposed feature freeze: 3 days before the demo. Shared decision: pending.”", ar: "«المدة المقترحة لإيقاف إضافة الميزات: 3 أيام قبل العرض. القرار المشترك: قيد الانتظار.»" } }
   },
   ai: {
     projectInsights: [
-      {
-        label: { en: "Recent change", ar: "تغيير حديث" },
-        text: { en: "audit.xlsx v2 expanded the review scope by 28 pages and introduced Daniel K. as reviewer.", ar: "وسّع الإصدار v2 من audit.xlsx نطاق المراجعة بمقدار 28 صفحة وأضاف دانيال ك. بصفته المراجع." }
-      },
-      {
-        label: { en: "Dependency", ar: "اعتماد مترابط" },
-        text: { en: "Redirect testing depends on both a review of redirects.csv v1 and authorized access to the staging environment.", ar: "يعتمد اختبار التحويلات على مراجعة الإصدار v1 من redirects.csv والحصول على وصول مصرح به إلى بيئة الاختبار." }
-      },
-      {
-        label: { en: "Blockers", ar: "العوائق" },
-        text: { en: "The receiver can inspect the audit evidence now, but cannot confirm launch readiness until those dependencies are resolved.", ar: "يمكن للمستلم فحص أدلة التدقيق الآن، لكنه لا يستطيع تأكيد الجاهزية للإطلاق حتى تُحل هذه الاعتمادات." }
-      }
+      { label: { en: "Recent change", ar: "تغيير حديث" }, text: { en: "requirements.xlsx v2 adds three requirements. Check the [[model]] against the updated scope.", ar: "يضيف الإصدار v2 من requirements.xlsx ثلاثة متطلبات. يجب فحص النموذج الأولي وفق النطاق المحدّث." } },
+      { label: { en: "Next handover", ar: "التسليم التالي" }, text: { en: "Sima should review the [[interface]] with Yumna before integration testing begins.", ar: "ينبغي لسيما مراجعة واجهة المستخدم مع يمنى قبل بدء اختبار التكامل." } },
+      { label: { en: "Blockers", ar: "العوائق" }, text: { en: "Test evidence and an agreed feature freeze period are still missing. Clarify the [[approval]] needed before submission.", ar: "لا تزال أدلة الاختبار والاتفاق على مدة إيقاف إضافة الميزات غير مكتملين. يجب توضيح الموافقة المطلوبة قبل التسليم." } }
     ],
-    projectSummarySources: ["audit.xlsx / v2", "redirects.csv / v1", "launch-plan.docx / v1"],
-    suggestion: { en: "Mention that redirect testing is still pending and has no evidence yet.", ar: "اذكر أن اختبار التحويلات لا يزال قيد الانتظار ولا توجد له أدلة بعد." },
-    insertText: { en: "Redirect testing is still pending and has no evidence yet.", ar: "لا يزال اختبار التحويلات قيد الانتظار ولا توجد له أدلة بعد." },
-    source: "redirects.csv / v1",
-    clarificationQuestion: { en: "What evidence is needed for redirect testing?", ar: "ما الدليل المطلوب لاختبار التحويلات؟" },
-    clarificationContext: { en: "The AI flagged redirect testing as pending with no evidence. What should be added before the handover?", ar: "أشار الذكاء الاصطناعي إلى أن اختبار التحويلات لا يزال قيد الانتظار ولا يوجد دليل مرفق. ما الذي يجب إضافته قبل التسليم؟" },
-    review: { en: "The summary does not mention that the launch sign-off is blocked.", ar: "لا يذكر الملخص أن اعتماد الإطلاق متوقف." }
+    projectSummarySources: ["requirements.xlsx / v2", "prototype-notes.docx / v1", "submission-plan.docx / v1"],
+    suggestion: { en: "Clarify whether the [[interface]] to review is the task board screen or the API contract before Yumna starts integration testing.", ar: "وضّح ما إذا كانت الواجهة المطلوب مراجعتها هي شاشة لوحة المهام أم عقد الواجهة البرمجية قبل أن تبدأ يمنى اختبار التكامل." },
+    insertText: { en: "Before integration testing, Sima and Yumna should confirm which [[interface]] needs review and attach the agreed test checklist.", ar: "قبل اختبار التكامل، ينبغي لسيما ويمنى تأكيد الواجهة المطلوب مراجعتها وإرفاق قائمة الاختبارات المتفق عليها." },
+    source: "prototype-notes.docx / v1",
+    clarificationQuestion: { en: "Which interface should we review before integration testing?", ar: "ما الواجهة التي يجب مراجعتها قبل اختبار التكامل؟" },
+    clarificationContext: { en: "The suggestion refers to the [[interface]]. Please confirm whether this means the task board UI or the API contract, and what evidence should be attached.", ar: "يشير الاقتراح إلى الواجهة. يرجى تأكيد ما إذا كان المقصود واجهة لوحة المهام أم عقد الواجهة البرمجية، وما الأدلة التي ينبغي إرفاقها." },
+    review: { en: "Confirm what [[approval]] means in the open issues and agree on the feature freeze period before the final course submission.", ar: "تأكد من معنى الاعتماد في المشكلات المفتوحة واتفقا على مدة إيقاف إضافة الميزات قبل التسليم النهائي للمقرر." }
   }
 };
